@@ -14,8 +14,7 @@ int wordComplete(char *word) {
 	}
 }
 
-int _tmain(int argc, _TCHAR* argv[])
-{
+int main() {
 	hngWelcomeMessage();
 	int gameStatus = newGameOrExit();
 	
