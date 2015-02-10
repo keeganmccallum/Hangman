@@ -11,7 +11,7 @@ void score(int difficulty,int numGuess){
     }else if(numGuess > 1 && numGuess <=3){
       printf("Well Done\n");
     }else{
-      printf("You're awful\n");
+      printf("Poorly Done\n");
     }//end if
   }else if(difficulty == 2){
     if(numGuess == 1){
@@ -19,7 +19,7 @@ void score(int difficulty,int numGuess){
     }else if(numGuess > 1 && numGuess <=3){
       printf("Well Done\n");
     }else{
-      printf("You're terrible\n");
+      printf("Poorly Donen");
     }//end if
   }else{
     if(numGuess == 1){
@@ -27,7 +27,7 @@ void score(int difficulty,int numGuess){
     }else if(numGuess > 1 && numGuess <=3){
       printf("Well Done\n");
     }else{
-      printf("Horrible\n");
+      printf("Poorly Done\n");
     }//end if
   }//end if
 
