@@ -4,11 +4,11 @@ CISC 221 Project
 
 ## GLOBAL DATA STRUCTURES
 
-- (array) letters_already_guessed, both correct and incorrect
-- create a 27-character-long "array" of characters (char[])
-- set all positions to null (\0)
-- now we can traverse!
-- when adding a value, replace the first null reached with the character
+- (array) lettersAlreadyGuessed, both correct and incorrect
+  - create a 27-character-long "array" of characters (char[])
+  - set all positions to null (\0)
+  - now we can traverse!
+  - when adding a value, replace the first null reached with the character
 - (array) word bank, one of which is chosen at the beginning of the program
 - (int) number of lives remaining
 
