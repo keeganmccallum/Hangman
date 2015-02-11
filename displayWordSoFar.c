@@ -8,6 +8,7 @@ void displayWordSoFar(char correctWord[]) {
 			if (correctWord[i] == lettersAlreadyGuessed[j]) {
 				match = 1;
 			}
+			j++;
 		}
 		if (match) {
 			printChar = correctWord[i];
