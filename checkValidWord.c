@@ -1,6 +1,7 @@
 int checkValidWord (char guess[], char correctWord[]) {
 	int i;
 	i = 0;
+	//if player guesses correct word, return "true", else return "false" 
 	while (correctWord[i] != '\0') {
 		if (guess[i] != correctWord[i]) {
 			return 0; //false
