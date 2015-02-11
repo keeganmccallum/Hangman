@@ -1,0 +1,1 @@
+void displayWordSoFar(char correctWord[]);
