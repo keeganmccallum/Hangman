@@ -78,3 +78,24 @@ int newGameOrExit() {
 		return 0;
 	}
 }
+
+int getDifficulty() {
+	printf("Please enter a difficulty, 1: easy, 2: medium, 3: hard\n");
+	
+	char difficulty;
+	while ((difficulty = getchar()) != '\n' && difficulty != EOF);
+	difficulty = getchar();
+	
+	if (difficulty != '1' && difficulty != '2' && difficulty != '3') {
+		printf("Error reading difficulty.\n");
+		exit(1);
+	}
+
+	return (difficulty - '0'); //Hacky ascii to int thing.
+}
+
+void displayGuessString(char *guessString) {
+	printf("           ");
+	printf("%s\n", guessString);
+	printf("\n");
+}

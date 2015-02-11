@@ -9,4 +9,8 @@ void hngDrawMan(int lives);
 
 int newGameOrExit();
 
+int getDifficulty();
+
+void displayGuessString();
+
 #endif
