@@ -1,5 +1,4 @@
 #include "hngDisplay.h"
-#include "wordbank.h"
 #include "groupFunc.h"
 
 #include <stdio.h>
