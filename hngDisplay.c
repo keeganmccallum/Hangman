@@ -60,6 +60,8 @@ void hngDrawMan(int lives) {
 int newGameOrExit() {
 	printf("Would you like to start a new game? (y/n): \n");
 	
+	char c;
+	while ((c = getchar()) != '\n' && c != EOF);
 	char response = getchar();
 
 	if (response == EOF) {
