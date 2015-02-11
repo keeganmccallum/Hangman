@@ -1,6 +1,7 @@
 int checkValidChar (char guess, char correctWord[]) {
-	int i = 0;
-	int result = -1;
+	int i;
+	i = 0;
+	int result;
 	while (i < 27) {
 		if (lettersAlreadyGuessed[i] == guess) {
 			return 0;
@@ -15,7 +16,8 @@ int checkValidChar (char guess, char correctWord[]) {
 			}
 		}
 	}
-	int j = 0;
+	int j;
+	j = 0;
 	while (correctWord[j] != '\0') {
 		if (guess == correctWord[j]) {
 			result = 1;

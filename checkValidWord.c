@@ -1,5 +1,6 @@
 int checkValidWord (char guess[], char correctWord[]) {
-	int i = 0;
+	int i;
+	i = 0;
 	while (correctWord[i] != '\0') {
 		if (guess[i] != correctWord[i]) {
 			return 0; //false
