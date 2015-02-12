@@ -6,11 +6,11 @@ char lettersAlreadyGuessed[27] = {'\0'};
 int lives = 6;
 
 void welcomeMessage() {
-        printf("********************************\n");
-        printf("*          Hangman             *\n");
-        printf("*     A group 7 project        *\n");
-        printf("*                              *\n");
-        printf("********************************\n");
+        printf("*****************************\n");
+        printf("*          Hangman          *\n");
+        printf("*     A group 7 project     *\n");
+        printf("*                           *\n");
+        printf("*****************************\n");
 }
 
 int score(int lives, int difficulty) {
@@ -241,11 +241,11 @@ int main() {
 	int myScore = score(lives, difficulty);
 	if (win == 1) {
 			printf("You Win!\n");
-			printf("You're score was: %i\n", myScore);
+			printf("Your score was: %i\n", myScore);
 	}
 	else {
 			printf("You Lose!\n");
-			printf("You're score was: 0\n");
+			printf("Your score was: 0\n");
 	}
 	return 0;
 }
