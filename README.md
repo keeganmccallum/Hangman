@@ -27,7 +27,7 @@ int checkValidCharacter(char guess, char correctWord[])
 - add the guess to the list of letters already guessed
 
 void displayWordSoFar(char correctWord[])
-- look at each letter in correctWord see if it's already in letters_already_guessed
+- look at each letter in correctWord see if it's already in lettersAlreadyGuessed
 - if it is, display it; otherwise, display a blank
 
 void welcomeMessage()
