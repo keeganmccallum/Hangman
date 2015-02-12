@@ -95,6 +95,7 @@ int validWord (char *guess, char* correctWord) {
 			}
 		}
 	}
+	return 0; //false
 }
 
 int validChar (char guess, char* correctWord) {
@@ -225,8 +226,6 @@ void hngDrawMan(int lives) {
 }
 
 int isValidGuess(char *guess, char *word) {
-	int guessStatus;
-
 	int badGuess = 0;
 	int charGuess = 1;
 	int wordGuess = 2;
@@ -257,7 +256,6 @@ int main() {
 	int difficulty = getDifficulty();
 	int numLives = 6;
 	char *word = wordBank(difficulty);
-	char guess;
 
 	while (numLives > 0 && !wordComplete(word)) { 
 		
