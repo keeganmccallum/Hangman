@@ -1,9 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 
-char lettersAlreadyGuessed[27] = {'\0'};
-
-int lives = 6;
+char lettersAlreadyGuessed[26] = {'\0'};
 
 void welcomeMessage() {
         printf("*****************************\n");
@@ -11,6 +9,50 @@ void welcomeMessage() {
         printf("*     A group 7 project     *\n");
         printf("*                           *\n");
         printf("*****************************\n");
+}
+
+
+/*
+*newGameOrExit - Returns 1 for a new game, 0 for exit
+*/
+int newGameOrExit() {
+	printf("Would you like to start a new game? (y/n): \n");
+	
+	char response = getchar();
+
+	if (response == EOF) {
+		printf("Error processing input, exiting...\n");
+		exit(1);
+	}
+	
+	if ((response != 'y') && (response != 'n')) {
+		printf("Sorry, I didn't understand you.\n");
+		return newGameOrExit();
+	}
+
+	if (response == 'y') {
+		return 1;
+	}
+	else {
+		return 0;
+	}
+}
+
+int getDifficulty() {
+	printf("Please enter a difficulty, 1: easy, 2: medium, 3: hard\n");
+		
+	char c;
+	while ((c = getchar()) != '\n' && c != EOF);
+	
+	char difficulty;
+	difficulty = getchar();
+	
+	if (difficulty != '1' && difficulty != '2' && difficulty != '3') {
+		printf("Error reading difficulty.\n");
+		exit(1);
+	}
+
+	return (difficulty - '0'); //Hacky ascii to int thing.
 }
 
 int score(int lives, int difficulty) {
@@ -36,7 +78,7 @@ char *wordBank(int difficulty) {
 
 }//end wordBank
 
-int checkValidWord (char guess[], char* correctWord) {
+int validWord (char *guess, char* correctWord) {
 	int i;
 	i = 0;
 	//if player guesses correct word, return "true", else return "false"
@@ -55,17 +97,17 @@ int checkValidWord (char guess[], char* correctWord) {
 	}
 }
 
-int checkValidChar (char guess[], char* correctWord) {
+int validChar (char guess, char* correctWord) {
 	int i;
 	i = 0;
 	int result;
 	while (i < 27) {
-		if (lettersAlreadyGuessed[i] == guess[0]) {
+		if (lettersAlreadyGuessed[i] == guess) {
 			return 0;
 		}
 		else {
 			if (lettersAlreadyGuessed[i] == '\0') {
-				lettersAlreadyGuessed[i] = guess[0];
+				lettersAlreadyGuessed[i] = guess;
 				break;
 			}
 			else {
@@ -76,7 +118,7 @@ int checkValidChar (char guess[], char* correctWord) {
 	int j;
 	j = 0;
 	while (correctWord[j] != '\0') {
-		if (guess[0] == correctWord[j]) {
+		if (guess == correctWord[j]) {
 			result = 1;
 			break;
 		}
@@ -89,17 +131,17 @@ int checkValidChar (char guess[], char* correctWord) {
 }
 
 int wordComplete(char* word) {
-    int i = 0;
+	int i = 0;
 	while (word[i] != '\0') {
-		int inGuess = 0;
+		int goodGuess = 0;
 		int j = 0;
 		while (lettersAlreadyGuessed[j] != '\0') {
 			if (word[i] == lettersAlreadyGuessed[j]) {
-					inGuess = 1;
+				goodGuess = 1;
 			}
 			j++;
 		}
-		if (!inGuess) {
+		if (!goodGuess) {
 			return 0;
 		}
 		i++;
@@ -129,6 +171,13 @@ void displayWordSoFar(char* correctWord) {
 		i++;
 	}
 	printf("\n");
+}
+
+void guessAllLetters() {
+	int i;
+	for (i = 97; i <= 122; i++) {
+		lettersAlreadyGuessed[i - 97] = i;
+	}
 }
 
 void hngDrawMan(int lives) {
@@ -175,88 +224,88 @@ void hngDrawMan(int lives) {
 	printf("          |-------\n");
 }
 
-int main() {
+int isValidGuess(char *guess, char *word) {
+	int guessStatus;
 
-	welcomeMessage();
-
-	printf("Select a difficulty\n");
-
-	printf("Enter (1) for Easy, (2) for Normal, (3) for Hard\n");
-	int difficulty;
-
-	int errCheck = 0;
-	while(errCheck == 0) {
-		scanf("%i", &difficulty);
-		if      (difficulty>0 && difficulty <4){
-				 errCheck = 1;
-		}
-		else {
-				printf("Invalid Difficulty. Please select the proper difficulty\n");
-		}//end if block
-
-	}//end while
-	 //Retrieve word from wordbank
-	char* word = wordBank(difficulty);
-	int win;
-	hngDrawMan(lives);
-	displayWordSoFar(word);
-	while (lives != 0) {
-		printf("Please guess a word or a letter, but beware: If you guess a word and get it wrong, you automatically lose!\n");
-		char userGuess[13];
-		scanf("%s", &userGuess);
-		if (userGuess[1] == '\0') {
-			int inWord = checkValidChar(userGuess, word);
-			if (inWord == 1) {
-				hngDrawMan(lives);
-				displayWordSoFar(word);
-				if (wordComplete(word) == 1) {
-						win = 1;
-						 break;
-				}
-			}
-			else {
-				lives--;
-				if (lives == 0) {
-						win = 0;
-						break;
-				}
-				else {
-						hngDrawMan(lives);
-						displayWordSoFar(word);
-				}
-			}
-		}
-		else {
-			int answer = checkValidWord(userGuess, word);
-			if (answer == 1) {
-					win = 1;
-					break;
-			}
-			else {
-					win = 0;
-					break;
-			}
+	int badGuess = 0;
+	int charGuess = 1;
+	int wordGuess = 2;
+	
+	if (guess[1] != '\0') { //longer then just a char
+		if(validWord(guess, word)) {
+			return wordGuess;
 		}
 	}
-	int myScore = score(lives, difficulty);
-	if (win == 1) {
-			printf("You Win!\n");
-			printf("Your score was: %i\n", myScore);
-	}
-	else {
-			printf("You Lose!\n");
-			printf("Your score was: 0\n");
-	}
-	return 0;
+	else { 
+		char chrGuess = guess[0];
+		if(validChar(chrGuess, word)) {
+			return charGuess;
+		}
+	}	
+	return badGuess;
 }
 
 
+int main() {
+	welcomeMessage();
+	int gameStatus = newGameOrExit();
 
+	if (gameStatus == 0) {
+		exit(1);
+	}
 
+	int difficulty = getDifficulty();
 
+	int numLives = 6;
+	
+	const int LETTERS_IN_ALPHABET = 26;
+	char lettersAlreadyGuessed[LETTERS_IN_ALPHABET];
+	int i;
+	for (i = 0; i < LETTERS_IN_ALPHABET; i++) {
+		lettersAlreadyGuessed[i] = 0;
+	}
 
+	char *word = wordBank(difficulty);
+	char guess;
 
+	while (numLives > 0 && !wordComplete(word)) { 
+		
+		hngDrawMan(numLives);
+		printf("Please make a guess: ");
+		displayWordSoFar(word);	
+		
+		//Flush the input buffer
+		char c;
+		while ((c = getchar()) != '\n' && c != EOF);
+		
+		char guess[256];
+		scanf("%s", guess);
+		
+		int guessStatus = isValidGuess(guess, word);
 
+	
+		printf("\n\n");
+		if (guessStatus == 0) {
+			numLives--;
+			printf("Oops, take another guess!\n");
+		}
+		else if (guessStatus == 1) {
+			printf("Good guess!\n");
+		}
+		else {
+			printf("Good guess! You knew the word!\n");
+			guessAllLetters();
+			break;
+		}
+	}		
 
-
-
+	hngDrawMan(numLives);
+	displayWordSoFar(word);
+	if (wordComplete(word)) {
+		printf("You won!\n");
+	}
+	else {
+		printf("You Lost, try again.\n");
+	}
+	return 0;
+}
