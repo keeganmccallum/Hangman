@@ -1,847 +1,965 @@
+	.arch armv6
+	.eabi_attribute 27, 3
+	.eabi_attribute 28, 1
+	.fpu vfp
+	.eabi_attribute 20, 1
+	.eabi_attribute 21, 1
+	.eabi_attribute 23, 3
+	.eabi_attribute 24, 1
+	.eabi_attribute 25, 1
+	.eabi_attribute 26, 2
+	.eabi_attribute 30, 6
+	.eabi_attribute 18, 4
 	.file	"project1.c"
-	.globl	lettersAlreadyGuessed
+	.global	lettersAlreadyGuessed
 	.bss
-	.align 16
-	.type	lettersAlreadyGuessed, @object
+	.align	2
+	.type	lettersAlreadyGuessed, %object
 	.size	lettersAlreadyGuessed, 26
 lettersAlreadyGuessed:
-	.zero	26
+	.space	26
 	.section	.rodata
+	.align	2
 .LC0:
-	.string	"*****************************"
+	.ascii	"*****************************\000"
+	.align	2
 .LC1:
-	.string	"*          Hangman          *"
+	.ascii	"*          Hangman          *\000"
+	.align	2
 .LC2:
-	.string	"*     A group 7 project     *"
+	.ascii	"*     A group 7 project     *\000"
+	.align	2
 .LC3:
-	.string	"*                           *"
+	.ascii	"*                           *\000"
 	.text
-	.globl	welcomeMessage
-	.type	welcomeMessage, @function
+	.align	2
+	.global	welcomeMessage
+	.type	welcomeMessage, %function
 welcomeMessage:
-.LFB0:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	movl	$.LC0, %edi
-	call	puts
-	movl	$.LC1, %edi
-	call	puts
-	movl	$.LC2, %edi
-	call	puts
-	movl	$.LC3, %edi
-	call	puts
-	movl	$.LC0, %edi
-	call	puts
-	popq	%rbp
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE0:
+	@ args = 0, pretend = 0, frame = 0
+	@ frame_needed = 1, uses_anonymous_args = 0
+	stmfd	sp!, {fp, lr}
+	add	fp, sp, #4
+	ldr	r0, .L2
+	bl	puts
+	ldr	r0, .L2+4
+	bl	puts
+	ldr	r0, .L2+8
+	bl	puts
+	ldr	r0, .L2+12
+	bl	puts
+	ldr	r0, .L2
+	bl	puts
+	ldmfd	sp!, {fp, pc}
+.L3:
+	.align	2
+.L2:
+	.word	.LC0
+	.word	.LC1
+	.word	.LC2
+	.word	.LC3
 	.size	welcomeMessage, .-welcomeMessage
 	.section	.rodata
-	.align 8
+	.align	2
 .LC4:
-	.string	"Would you like to start a new game? (y/n): "
-	.align 8
+	.ascii	"Would you like to start a new game? (y/n): \000"
+	.align	2
 .LC5:
-	.string	"Error processing input, exiting..."
-	.align 8
-.LC6:
-	.string	"Sorry, I didn't understand you."
+	.ascii	"Sorry, I didn't understand you.\000"
 	.text
-	.globl	newGameOrExit
-	.type	newGameOrExit, @function
+	.align	2
+	.global	newGameOrExit
+	.type	newGameOrExit, %function
 newGameOrExit:
-.LFB1:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	subq	$16, %rsp
-	movl	$.LC4, %edi
-	call	puts
-	call	getchar
-	movb	%al, -1(%rbp)
-	cmpb	$-1, -1(%rbp)
-	jne	.L3
-	movl	$.LC5, %edi
-	call	puts
-	movl	$1, %edi
-	call	exit
-.L3:
-	cmpb	$121, -1(%rbp)
-	je	.L4
-	cmpb	$110, -1(%rbp)
-	je	.L4
-	movl	$.LC6, %edi
-	call	puts
-	movl	$0, %eax
-	call	newGameOrExit
-	jmp	.L5
-.L4:
-	cmpb	$121, -1(%rbp)
-	jne	.L6
-	movl	$1, %eax
-	jmp	.L5
-.L6:
-	movl	$0, %eax
+	@ args = 0, pretend = 0, frame = 8
+	@ frame_needed = 1, uses_anonymous_args = 0
+	stmfd	sp!, {fp, lr}
+	add	fp, sp, #4
+	sub	sp, sp, #8
+	ldr	r0, .L8
+	bl	puts
+	bl	getchar
+	mov	r3, r0
+	strb	r3, [fp, #-5]
+	ldrb	r3, [fp, #-5]	@ zero_extendqisi2
+	cmp	r3, #121
+	beq	.L5
+	ldrb	r3, [fp, #-5]	@ zero_extendqisi2
+	cmp	r3, #110
+	beq	.L5
+	ldr	r0, .L8+4
+	bl	puts
+	bl	newGameOrExit
+	mov	r3, r0
+	b	.L6
 .L5:
-	leave
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE1:
+	ldrb	r3, [fp, #-5]	@ zero_extendqisi2
+	cmp	r3, #121
+	bne	.L7
+	mov	r3, #1
+	b	.L6
+.L7:
+	mov	r3, #0
+.L6:
+	mov	r0, r3
+	sub	sp, fp, #4
+	ldmfd	sp!, {fp, pc}
+.L9:
+	.align	2
+.L8:
+	.word	.LC4
+	.word	.LC5
 	.size	newGameOrExit, .-newGameOrExit
 	.section	.rodata
-	.align 8
+	.align	2
+.LC6:
+	.ascii	"Please enter a difficulty, 1: easy, 2: medium, 3: h"
+	.ascii	"ard\000"
+	.align	2
 .LC7:
-	.string	"Please enter a difficulty, 1: easy, 2: medium, 3: hard"
-.LC8:
-	.string	"Error reading difficulty."
+	.ascii	"Error reading difficulty.\000"
 	.text
-	.globl	getDifficulty
-	.type	getDifficulty, @function
+	.align	2
+	.global	getDifficulty
+	.type	getDifficulty, %function
 getDifficulty:
-.LFB2:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	subq	$16, %rsp
-	movl	$.LC7, %edi
-	call	puts
-	nop
-.L9:
-	call	getchar
-	movb	%al, -2(%rbp)
-	cmpb	$10, -2(%rbp)
-	je	.L8
-	cmpb	$-1, -2(%rbp)
-	jne	.L9
-.L8:
-	call	getchar
-	movb	%al, -1(%rbp)
-	cmpb	$49, -1(%rbp)
-	je	.L10
-	cmpb	$50, -1(%rbp)
-	je	.L10
-	cmpb	$51, -1(%rbp)
-	je	.L10
-	movl	$.LC8, %edi
-	call	puts
-	movl	$1, %edi
-	call	exit
-.L10:
-	movsbl	-1(%rbp), %eax
-	subl	$48, %eax
-	leave
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE2:
-	.size	getDifficulty, .-getDifficulty
-	.globl	score
-	.type	score, @function
-score:
-.LFB3:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	movl	%edi, -20(%rbp)
-	movl	%esi, -24(%rbp)
-	movl	-20(%rbp), %eax
-	imull	-24(%rbp), %eax
-	movl	%eax, -4(%rbp)
-	movl	-4(%rbp), %eax
-	popq	%rbp
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE3:
-	.size	score, .-score
-	.globl	wordBank
-	.type	wordBank, @function
-wordBank:
-.LFB4:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	movl	%edi, -4(%rbp)
-	cmpl	$1, -4(%rbp)
-	jne	.L13
-	movl	$easy.2560, %eax
-	jmp	.L14
-.L13:
-	cmpl	$2, -4(%rbp)
-	jne	.L15
-	movl	$norm.2561, %eax
-	jmp	.L14
-.L15:
-	movl	$hard.2562, %eax
+	@ args = 0, pretend = 0, frame = 8
+	@ frame_needed = 1, uses_anonymous_args = 0
+	stmfd	sp!, {fp, lr}
+	add	fp, sp, #4
+	sub	sp, sp, #8
+	ldr	r0, .L13
+	bl	puts
+	mov	r0, r0	@ nop
+.L11:
+	bl	getchar
+	mov	r3, r0
+	strb	r3, [fp, #-5]
+	ldrb	r3, [fp, #-5]	@ zero_extendqisi2
+	cmp	r3, #10
+	bne	.L11
+	bl	getchar
+	mov	r3, r0
+	strb	r3, [fp, #-6]
+	ldrb	r3, [fp, #-6]	@ zero_extendqisi2
+	cmp	r3, #49
+	beq	.L12
+	ldrb	r3, [fp, #-6]	@ zero_extendqisi2
+	cmp	r3, #50
+	beq	.L12
+	ldrb	r3, [fp, #-6]	@ zero_extendqisi2
+	cmp	r3, #51
+	beq	.L12
+	ldr	r0, .L13+4
+	bl	puts
+	mov	r0, #1
+	bl	exit
+.L12:
+	ldrb	r3, [fp, #-6]	@ zero_extendqisi2
+	sub	r3, r3, #48
+	mov	r0, r3
+	sub	sp, fp, #4
+	ldmfd	sp!, {fp, pc}
 .L14:
-	popq	%rbp
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE4:
-	.size	wordBank, .-wordBank
-	.globl	validWord
-	.type	validWord, @function
-validWord:
-.LFB5:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	movq	%rdi, -24(%rbp)
-	movq	%rsi, -32(%rbp)
-	movl	$0, -4(%rbp)
-	jmp	.L17
-.L21:
-	movl	-4(%rbp), %eax
-	cltq
-	addq	-24(%rbp), %rax
-	movzbl	(%rax), %edx
-	movl	-4(%rbp), %eax
-	cltq
-	addq	-32(%rbp), %rax
-	movzbl	(%rax), %eax
-	cmpb	%al, %dl
-	je	.L18
-	movl	$0, %eax
-	jmp	.L19
-.L18:
-	movl	-4(%rbp), %eax
-	cltq
-	addq	$1, %rax
-	addq	-32(%rbp), %rax
-	movzbl	(%rax), %eax
-	testb	%al, %al
-	jne	.L20
-	movl	-4(%rbp), %eax
-	cltq
-	addq	$1, %rax
-	addq	-24(%rbp), %rax
-	movzbl	(%rax), %eax
-	testb	%al, %al
-	jne	.L20
-	movl	$1, %eax
-	jmp	.L19
-.L20:
-	addl	$1, -4(%rbp)
+	.align	2
+.L13:
+	.word	.LC6
+	.word	.LC7
+	.size	getDifficulty, .-getDifficulty
+	.align	2
+	.global	score
+	.type	score, %function
+score:
+	@ args = 0, pretend = 0, frame = 16
+	@ frame_needed = 1, uses_anonymous_args = 0
+	@ link register save eliminated.
+	str	fp, [sp, #-4]!
+	add	fp, sp, #0
+	sub	sp, sp, #20
+	str	r0, [fp, #-16]
+	str	r1, [fp, #-20]
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-20]
+	mul	r3, r2, r3
+	str	r3, [fp, #-8]
+	ldr	r3, [fp, #-8]
+	mov	r0, r3
+	add	sp, fp, #0
+	ldmfd	sp!, {fp}
+	bx	lr
+	.size	score, .-score
+	.align	2
+	.global	wordBank
+	.type	wordBank, %function
+wordBank:
+	@ args = 0, pretend = 0, frame = 8
+	@ frame_needed = 1, uses_anonymous_args = 0
+	@ link register save eliminated.
+	str	fp, [sp, #-4]!
+	add	fp, sp, #0
+	sub	sp, sp, #12
+	str	r0, [fp, #-8]
+	ldr	r3, [fp, #-8]
+	cmp	r3, #1
+	bne	.L17
+	ldr	r3, .L20
+	b	.L18
 .L17:
-	movl	-4(%rbp), %eax
-	cltq
-	addq	-32(%rbp), %rax
-	movzbl	(%rax), %eax
-	testb	%al, %al
-	jne	.L21
-	jmp	.L16
+	ldr	r3, [fp, #-8]
+	cmp	r3, #2
+	bne	.L19
+	ldr	r3, .L20+4
+	b	.L18
 .L19:
-.L16:
-	popq	%rbp
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE5:
-	.size	validWord, .-validWord
-	.globl	validChar
-	.type	validChar, @function
-validChar:
-.LFB6:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	movl	%edi, %eax
-	movq	%rsi, -32(%rbp)
-	movb	%al, -20(%rbp)
-	movl	$0, -12(%rbp)
-	jmp	.L23
-.L28:
-	movl	-12(%rbp), %eax
-	cltq
-	movzbl	lettersAlreadyGuessed(%rax), %eax
-	cmpb	-20(%rbp), %al
-	jne	.L24
-	movl	$0, %eax
-	jmp	.L25
-.L24:
-	movl	-12(%rbp), %eax
-	cltq
-	movzbl	lettersAlreadyGuessed(%rax), %eax
-	testb	%al, %al
-	jne	.L26
-	movl	-12(%rbp), %eax
-	cltq
-	movzbl	-20(%rbp), %edx
-	movb	%dl, lettersAlreadyGuessed(%rax)
-	jmp	.L27
-.L26:
-	addl	$1, -12(%rbp)
-.L23:
-	cmpl	$26, -12(%rbp)
-	jle	.L28
+	ldr	r3, .L20+8
+.L18:
+	mov	r0, r3
+	add	sp, fp, #0
+	ldmfd	sp!, {fp}
+	bx	lr
+.L21:
+	.align	2
+.L20:
+	.word	easy.2239
+	.word	norm.2240
+	.word	hard.2241
+	.size	wordBank, .-wordBank
+	.align	2
+	.global	validWord
+	.type	validWord, %function
+validWord:
+	@ args = 0, pretend = 0, frame = 16
+	@ frame_needed = 1, uses_anonymous_args = 0
+	@ link register save eliminated.
+	str	fp, [sp, #-4]!
+	add	fp, sp, #0
+	sub	sp, sp, #20
+	str	r0, [fp, #-16]
+	str	r1, [fp, #-20]
+	mov	r3, #0
+	str	r3, [fp, #-8]
+	b	.L23
 .L27:
-	movl	$0, -4(%rbp)
-	jmp	.L29
-.L32:
-	movl	-4(%rbp), %eax
-	cltq
-	addq	-32(%rbp), %rax
-	movzbl	(%rax), %eax
-	cmpb	-20(%rbp), %al
-	jne	.L30
-	movl	$1, -8(%rbp)
-	jmp	.L31
-.L30:
-	movl	$0, -8(%rbp)
-	addl	$1, -4(%rbp)
-.L29:
-	movl	-4(%rbp), %eax
-	cltq
-	addq	-32(%rbp), %rax
-	movzbl	(%rax), %eax
-	testb	%al, %al
-	jne	.L32
-.L31:
-	movl	-8(%rbp), %eax
+	ldr	r3, [fp, #-8]
+	ldr	r2, [fp, #-16]
+	add	r3, r2, r3
+	ldrb	r2, [r3, #0]	@ zero_extendqisi2
+	ldr	r3, [fp, #-8]
+	ldr	r1, [fp, #-20]
+	add	r3, r1, r3
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2
+	cmp	r2, r3
+	beq	.L24
+	mov	r3, #0
+	b	.L25
+.L24:
+	ldr	r3, [fp, #-8]
+	add	r3, r3, #1
+	ldr	r2, [fp, #-20]
+	add	r3, r2, r3
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2
+	cmp	r3, #0
+	bne	.L26
+	ldr	r3, [fp, #-8]
+	add	r3, r3, #1
+	ldr	r2, [fp, #-16]
+	add	r3, r2, r3
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2
+	cmp	r3, #0
+	bne	.L26
+	mov	r3, #1
+	b	.L25
+.L26:
+	ldr	r3, [fp, #-8]
+	add	r3, r3, #1
+	str	r3, [fp, #-8]
+.L23:
+	ldr	r3, [fp, #-8]
+	ldr	r2, [fp, #-20]
+	add	r3, r2, r3
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2
+	cmp	r3, #0
+	bne	.L27
+	b	.L22
 .L25:
-	popq	%rbp
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE6:
-	.size	validChar, .-validChar
-	.globl	wordComplete
-	.type	wordComplete, @function
-wordComplete:
-.LFB7:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	movq	%rdi, -24(%rbp)
-	movl	$0, -12(%rbp)
-	jmp	.L34
-.L40:
-	movl	$0, -8(%rbp)
-	movl	$0, -4(%rbp)
-	jmp	.L35
-.L37:
-	movl	-12(%rbp), %eax
-	cltq
-	addq	-24(%rbp), %rax
-	movzbl	(%rax), %edx
-	movl	-4(%rbp), %eax
-	cltq
-	movzbl	lettersAlreadyGuessed(%rax), %eax
-	cmpb	%al, %dl
-	jne	.L36
-	movl	$1, -8(%rbp)
-.L36:
-	addl	$1, -4(%rbp)
-.L35:
-	movl	-4(%rbp), %eax
-	cltq
-	movzbl	lettersAlreadyGuessed(%rax), %eax
-	testb	%al, %al
-	jne	.L37
-	cmpl	$0, -8(%rbp)
-	jne	.L38
-	movl	$0, %eax
-	jmp	.L39
-.L38:
-	addl	$1, -12(%rbp)
+.L22:
+	mov	r0, r3
+	add	sp, fp, #0
+	ldmfd	sp!, {fp}
+	bx	lr
+	.size	validWord, .-validWord
+	.align	2
+	.global	validChar
+	.type	validChar, %function
+validChar:
+	@ args = 0, pretend = 0, frame = 24
+	@ frame_needed = 1, uses_anonymous_args = 0
+	@ link register save eliminated.
+	str	fp, [sp, #-4]!
+	add	fp, sp, #0
+	sub	sp, sp, #28
+	mov	r3, r0
+	str	r1, [fp, #-28]
+	strb	r3, [fp, #-21]
+	mov	r3, #0
+	str	r3, [fp, #-8]
+	b	.L29
 .L34:
-	movl	-12(%rbp), %eax
-	cltq
-	addq	-24(%rbp), %rax
-	movzbl	(%rax), %eax
-	testb	%al, %al
-	jne	.L40
-	movl	$1, %eax
+	ldr	r2, .L39
+	ldr	r3, [fp, #-8]
+	add	r3, r2, r3
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2
+	ldrb	r2, [fp, #-21]	@ zero_extendqisi2
+	cmp	r2, r3
+	bne	.L30
+	mov	r3, #0
+	b	.L31
+.L30:
+	ldr	r2, .L39
+	ldr	r3, [fp, #-8]
+	add	r3, r2, r3
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2
+	cmp	r3, #0
+	bne	.L32
+	ldr	r2, .L39
+	ldr	r3, [fp, #-8]
+	add	r3, r2, r3
+	ldrb	r2, [fp, #-21]
+	strb	r2, [r3, #0]
+	b	.L33
+.L32:
+	ldr	r3, [fp, #-8]
+	add	r3, r3, #1
+	str	r3, [fp, #-8]
+.L29:
+	ldr	r3, [fp, #-8]
+	cmp	r3, #26
+	ble	.L34
+.L33:
+	mov	r3, #0
+	str	r3, [fp, #-16]
+	b	.L35
+.L38:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-28]
+	add	r3, r2, r3
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2
+	ldrb	r2, [fp, #-21]	@ zero_extendqisi2
+	cmp	r2, r3
+	bne	.L36
+	mov	r3, #1
+	str	r3, [fp, #-12]
+	b	.L37
+.L36:
+	mov	r3, #0
+	str	r3, [fp, #-12]
+	ldr	r3, [fp, #-16]
+	add	r3, r3, #1
+	str	r3, [fp, #-16]
+.L35:
+	ldr	r3, [fp, #-16]
+	ldr	r2, [fp, #-28]
+	add	r3, r2, r3
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2
+	cmp	r3, #0
+	bne	.L38
+.L37:
+	ldr	r3, [fp, #-12]
+.L31:
+	mov	r0, r3
+	add	sp, fp, #0
+	ldmfd	sp!, {fp}
+	bx	lr
+.L40:
+	.align	2
 .L39:
-	popq	%rbp
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE7:
-	.size	wordComplete, .-wordComplete
-	.globl	displayWordSoFar
-	.type	displayWordSoFar, @function
-displayWordSoFar:
-.LFB8:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	subq	$32, %rsp
-	movq	%rdi, -24(%rbp)
-	movl	$0, -16(%rbp)
-	jmp	.L42
+	.word	lettersAlreadyGuessed
+	.size	validChar, .-validChar
+	.align	2
+	.global	wordComplete
+	.type	wordComplete, %function
+wordComplete:
+	@ args = 0, pretend = 0, frame = 24
+	@ frame_needed = 1, uses_anonymous_args = 0
+	@ link register save eliminated.
+	str	fp, [sp, #-4]!
+	add	fp, sp, #0
+	sub	sp, sp, #28
+	str	r0, [fp, #-24]
+	mov	r3, #0
+	str	r3, [fp, #-8]
+	b	.L42
 .L48:
-	movl	$0, -12(%rbp)
-	movl	$0, -8(%rbp)
-	jmp	.L43
+	mov	r3, #0
+	str	r3, [fp, #-12]
+	mov	r3, #0
+	str	r3, [fp, #-16]
+	b	.L43
 .L45:
-	movl	-16(%rbp), %eax
-	cltq
-	addq	-24(%rbp), %rax
-	movzbl	(%rax), %edx
-	movl	-12(%rbp), %eax
-	cltq
-	movzbl	lettersAlreadyGuessed(%rax), %eax
-	cmpb	%al, %dl
-	jne	.L44
-	movl	$1, -8(%rbp)
+	ldr	r3, [fp, #-8]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	ldrb	r2, [r3, #0]	@ zero_extendqisi2
+	ldr	r1, .L49
+	ldr	r3, [fp, #-16]
+	add	r3, r1, r3
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2
+	cmp	r2, r3
+	bne	.L44
+	mov	r3, #1
+	str	r3, [fp, #-12]
 .L44:
-	addl	$1, -12(%rbp)
+	ldr	r3, [fp, #-16]
+	add	r3, r3, #1
+	str	r3, [fp, #-16]
 .L43:
-	movl	-12(%rbp), %eax
-	cltq
-	movzbl	lettersAlreadyGuessed(%rax), %eax
-	testb	%al, %al
-	jne	.L45
-	cmpl	$0, -8(%rbp)
-	je	.L46
-	movl	-16(%rbp), %eax
-	cltq
-	addq	-24(%rbp), %rax
-	movzbl	(%rax), %eax
-	movb	%al, -1(%rbp)
-	jmp	.L47
+	ldr	r2, .L49
+	ldr	r3, [fp, #-16]
+	add	r3, r2, r3
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2
+	cmp	r3, #0
+	bne	.L45
+	ldr	r3, [fp, #-12]
+	cmp	r3, #0
+	bne	.L46
+	mov	r3, #0
+	b	.L47
 .L46:
-	movb	$45, -1(%rbp)
-.L47:
-	movsbl	-1(%rbp), %eax
-	movl	%eax, %edi
-	call	putchar
-	addl	$1, -16(%rbp)
+	ldr	r3, [fp, #-8]
+	add	r3, r3, #1
+	str	r3, [fp, #-8]
 .L42:
-	movl	-16(%rbp), %eax
-	cltq
-	addq	-24(%rbp), %rax
-	movzbl	(%rax), %eax
-	testb	%al, %al
-	jne	.L48
-	movl	$10, %edi
-	call	putchar
-	leave
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE8:
-	.size	displayWordSoFar, .-displayWordSoFar
-	.globl	guessAllLetters
-	.type	guessAllLetters, @function
-guessAllLetters:
-.LFB9:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	movl	$97, -4(%rbp)
-	jmp	.L50
-.L51:
-	movl	-4(%rbp), %eax
-	leal	-97(%rax), %ecx
-	movl	-4(%rbp), %eax
-	movl	%eax, %edx
-	movslq	%ecx, %rax
-	movb	%dl, lettersAlreadyGuessed(%rax)
-	addl	$1, -4(%rbp)
+	ldr	r3, [fp, #-8]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2
+	cmp	r3, #0
+	bne	.L48
+	mov	r3, #1
+.L47:
+	mov	r0, r3
+	add	sp, fp, #0
+	ldmfd	sp!, {fp}
+	bx	lr
 .L50:
-	cmpl	$122, -4(%rbp)
-	jle	.L51
-	popq	%rbp
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE9:
+	.align	2
+.L49:
+	.word	lettersAlreadyGuessed
+	.size	wordComplete, .-wordComplete
+	.align	2
+	.global	displayWordSoFar
+	.type	displayWordSoFar, %function
+displayWordSoFar:
+	@ args = 0, pretend = 0, frame = 24
+	@ frame_needed = 1, uses_anonymous_args = 0
+	stmfd	sp!, {fp, lr}
+	add	fp, sp, #4
+	sub	sp, sp, #24
+	str	r0, [fp, #-24]
+	mov	r3, #0
+	str	r3, [fp, #-8]
+	b	.L52
+.L58:
+	mov	r3, #0
+	str	r3, [fp, #-12]
+	mov	r3, #0
+	str	r3, [fp, #-16]
+	b	.L53
+.L55:
+	ldr	r3, [fp, #-8]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	ldrb	r2, [r3, #0]	@ zero_extendqisi2
+	ldr	r1, .L59
+	ldr	r3, [fp, #-12]
+	add	r3, r1, r3
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2
+	cmp	r2, r3
+	bne	.L54
+	mov	r3, #1
+	str	r3, [fp, #-16]
+.L54:
+	ldr	r3, [fp, #-12]
+	add	r3, r3, #1
+	str	r3, [fp, #-12]
+.L53:
+	ldr	r2, .L59
+	ldr	r3, [fp, #-12]
+	add	r3, r2, r3
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2
+	cmp	r3, #0
+	bne	.L55
+	ldr	r3, [fp, #-16]
+	cmp	r3, #0
+	beq	.L56
+	ldr	r3, [fp, #-8]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	ldrb	r3, [r3, #0]
+	strb	r3, [fp, #-17]
+	b	.L57
+.L56:
+	mov	r3, #45
+	strb	r3, [fp, #-17]
+.L57:
+	ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+	mov	r0, r3
+	bl	putchar
+	ldr	r3, [fp, #-8]
+	add	r3, r3, #1
+	str	r3, [fp, #-8]
+.L52:
+	ldr	r3, [fp, #-8]
+	ldr	r2, [fp, #-24]
+	add	r3, r2, r3
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2
+	cmp	r3, #0
+	bne	.L58
+	mov	r0, #10
+	bl	putchar
+	sub	sp, fp, #4
+	ldmfd	sp!, {fp, pc}
+.L60:
+	.align	2
+.L59:
+	.word	lettersAlreadyGuessed
+	.size	displayWordSoFar, .-displayWordSoFar
+	.align	2
+	.global	guessAllLetters
+	.type	guessAllLetters, %function
+guessAllLetters:
+	@ args = 0, pretend = 0, frame = 8
+	@ frame_needed = 1, uses_anonymous_args = 0
+	@ link register save eliminated.
+	str	fp, [sp, #-4]!
+	add	fp, sp, #0
+	sub	sp, sp, #12
+	mov	r3, #97
+	str	r3, [fp, #-8]
+	b	.L62
+.L63:
+	ldr	r3, [fp, #-8]
+	sub	r3, r3, #97
+	ldr	r2, [fp, #-8]
+	uxtb	r1, r2
+	ldr	r2, .L64
+	strb	r1, [r2, r3]
+	ldr	r3, [fp, #-8]
+	add	r3, r3, #1
+	str	r3, [fp, #-8]
+.L62:
+	ldr	r3, [fp, #-8]
+	cmp	r3, #122
+	ble	.L63
+	add	sp, fp, #0
+	ldmfd	sp!, {fp}
+	bx	lr
+.L65:
+	.align	2
+.L64:
+	.word	lettersAlreadyGuessed
 	.size	guessAllLetters, .-guessAllLetters
 	.section	.rodata
+	.align	2
+.LC8:
+	.ascii	"You have %d %s left!\012\000"
+	.align	2
 .LC9:
-	.string	"life"
+	.ascii	"life\000"
+	.align	2
 .LC10:
-	.string	"lives"
+	.ascii	"lives\000"
+	.align	2
 .LC11:
-	.string	"You have %d %s left!\n"
+	.ascii	"          ---|          \000"
+	.align	2
 .LC12:
-	.string	"          ---|          "
+	.ascii	"          |  %c         \012\000"
+	.align	2
 .LC13:
-	.string	"          |  %c         \n"
+	.ascii	"          | %c%c%c\012\000"
+	.align	2
 .LC14:
-	.string	"          | %c%c%c\n"
+	.ascii	"          | %c %c\012\000"
+	.align	2
 .LC15:
-	.string	"          | %c %c\n"
-.LC16:
-	.string	"          |-------"
+	.ascii	"          |-------\000"
 	.text
-	.globl	hngDrawMan
-	.type	hngDrawMan, @function
+	.align	2
+	.global	hngDrawMan
+	.type	hngDrawMan, %function
 hngDrawMan:
-.LFB10:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	subq	$32, %rsp
-	movl	%edi, -20(%rbp)
-	cmpl	$6, -20(%rbp)
-	jg	.L64
-	cmpl	$0, -20(%rbp)
-	js	.L64
-.L54:
-	movb	$32, -6(%rbp)
-	movb	$32, -5(%rbp)
-	movb	$32, -4(%rbp)
-	movb	$32, -3(%rbp)
-	movb	$32, -2(%rbp)
-	movb	$32, -1(%rbp)
-	cmpl	$5, -20(%rbp)
-	jg	.L56
-	movb	$48, -6(%rbp)
-.L56:
-	cmpl	$4, -20(%rbp)
-	jg	.L57
-	movb	$124, -1(%rbp)
-.L57:
-	cmpl	$3, -20(%rbp)
-	jg	.L58
-	movb	$47, -5(%rbp)
-.L58:
-	cmpl	$2, -20(%rbp)
-	jg	.L59
-	movb	$92, -4(%rbp)
-.L59:
-	cmpl	$1, -20(%rbp)
-	jg	.L60
-	movb	$47, -3(%rbp)
-.L60:
-	cmpl	$0, -20(%rbp)
-	jne	.L61
-	movb	$92, -2(%rbp)
-.L61:
-	cmpl	$1, -20(%rbp)
-	jne	.L62
-	movl	$.LC9, %eax
-	jmp	.L63
-.L62:
-	movl	$.LC10, %eax
-.L63:
-	movl	$.LC11, %ecx
-	movl	-20(%rbp), %esi
-	movq	%rax, %rdx
-	movq	%rcx, %rdi
-	movl	$0, %eax
-	call	printf
-	movl	$.LC12, %edi
-	call	puts
-	movsbl	-6(%rbp), %edx
-	movl	$.LC13, %eax
-	movl	%edx, %esi
-	movq	%rax, %rdi
-	movl	$0, %eax
-	call	printf
-	movsbl	-4(%rbp), %ecx
-	movsbl	-1(%rbp), %edx
-	movsbl	-5(%rbp), %esi
-	movl	$.LC14, %eax
-	movq	%rax, %rdi
-	movl	$0, %eax
-	call	printf
-	movsbl	-2(%rbp), %edx
-	movsbl	-3(%rbp), %ecx
-	movl	$.LC15, %eax
-	movl	%ecx, %esi
-	movq	%rax, %rdi
-	movl	$0, %eax
-	call	printf
-	movl	$.LC16, %edi
-	call	puts
-	jmp	.L52
-.L64:
-	nop
-.L52:
-	leave
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE10:
-	.size	hngDrawMan, .-hngDrawMan
-	.globl	isValidGuess
-	.type	isValidGuess, @function
-isValidGuess:
-.LFB11:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	subq	$32, %rsp
-	movq	%rdi, -24(%rbp)
-	movq	%rsi, -32(%rbp)
-	movl	$0, -16(%rbp)
-	movl	$1, -12(%rbp)
-	movl	$2, -8(%rbp)
-	movq	-24(%rbp), %rax
-	addq	$1, %rax
-	movzbl	(%rax), %eax
-	testb	%al, %al
-	je	.L66
-	movq	-32(%rbp), %rdx
-	movq	-24(%rbp), %rax
-	movq	%rdx, %rsi
-	movq	%rax, %rdi
-	call	validWord
-	testl	%eax, %eax
-	je	.L67
-	movl	-8(%rbp), %eax
-	jmp	.L68
-.L66:
-	movq	-24(%rbp), %rax
-	movzbl	(%rax), %eax
-	movb	%al, -1(%rbp)
-	movsbl	-1(%rbp), %eax
-	movq	-32(%rbp), %rdx
-	movq	%rdx, %rsi
-	movl	%eax, %edi
-	call	validChar
-	testl	%eax, %eax
-	je	.L67
-	movl	-12(%rbp), %eax
-	jmp	.L68
-.L67:
-	movl	-16(%rbp), %eax
+	@ args = 0, pretend = 0, frame = 16
+	@ frame_needed = 1, uses_anonymous_args = 0
+	stmfd	sp!, {fp, lr}
+	add	fp, sp, #4
+	sub	sp, sp, #16
+	str	r0, [fp, #-16]
+	ldr	r3, [fp, #-16]
+	cmp	r3, #6
+	bgt	.L78
+	ldr	r3, [fp, #-16]
+	cmp	r3, #0
+	blt	.L78
 .L68:
-	leave
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE11:
+	mov	r3, #32
+	strb	r3, [fp, #-5]
+	mov	r3, #32
+	strb	r3, [fp, #-6]
+	mov	r3, #32
+	strb	r3, [fp, #-7]
+	mov	r3, #32
+	strb	r3, [fp, #-8]
+	mov	r3, #32
+	strb	r3, [fp, #-9]
+	mov	r3, #32
+	strb	r3, [fp, #-10]
+	ldr	r3, [fp, #-16]
+	cmp	r3, #5
+	bgt	.L70
+	mov	r3, #48
+	strb	r3, [fp, #-5]
+.L70:
+	ldr	r3, [fp, #-16]
+	cmp	r3, #4
+	bgt	.L71
+	mov	r3, #124
+	strb	r3, [fp, #-10]
+.L71:
+	ldr	r3, [fp, #-16]
+	cmp	r3, #3
+	bgt	.L72
+	mov	r3, #47
+	strb	r3, [fp, #-6]
+.L72:
+	ldr	r3, [fp, #-16]
+	cmp	r3, #2
+	bgt	.L73
+	mov	r3, #92
+	strb	r3, [fp, #-7]
+.L73:
+	ldr	r3, [fp, #-16]
+	cmp	r3, #1
+	bgt	.L74
+	mov	r3, #47
+	strb	r3, [fp, #-8]
+.L74:
+	ldr	r3, [fp, #-16]
+	cmp	r3, #0
+	bne	.L75
+	mov	r3, #92
+	strb	r3, [fp, #-9]
+.L75:
+	ldr	r2, .L79
+	ldr	r3, [fp, #-16]
+	cmp	r3, #1
+	bne	.L76
+	ldr	r3, .L79+4
+	b	.L77
+.L76:
+	ldr	r3, .L79+8
+.L77:
+	mov	r0, r2
+	ldr	r1, [fp, #-16]
+	mov	r2, r3
+	bl	printf
+	ldr	r0, .L79+12
+	bl	puts
+	ldr	r2, .L79+16
+	ldrb	r3, [fp, #-5]	@ zero_extendqisi2
+	mov	r0, r2
+	mov	r1, r3
+	bl	printf
+	ldr	r0, .L79+20
+	ldrb	r1, [fp, #-6]	@ zero_extendqisi2
+	ldrb	r2, [fp, #-10]	@ zero_extendqisi2
+	ldrb	r3, [fp, #-7]	@ zero_extendqisi2
+	bl	printf
+	ldr	r1, .L79+24
+	ldrb	r2, [fp, #-8]	@ zero_extendqisi2
+	ldrb	r3, [fp, #-9]	@ zero_extendqisi2
+	mov	r0, r1
+	mov	r1, r2
+	mov	r2, r3
+	bl	printf
+	ldr	r0, .L79+28
+	bl	puts
+	b	.L66
+.L78:
+	mov	r0, r0	@ nop
+.L66:
+	sub	sp, fp, #4
+	ldmfd	sp!, {fp, pc}
+.L80:
+	.align	2
+.L79:
+	.word	.LC8
+	.word	.LC9
+	.word	.LC10
+	.word	.LC11
+	.word	.LC12
+	.word	.LC13
+	.word	.LC14
+	.word	.LC15
+	.size	hngDrawMan, .-hngDrawMan
+	.align	2
+	.global	isValidGuess
+	.type	isValidGuess, %function
+isValidGuess:
+	@ args = 0, pretend = 0, frame = 24
+	@ frame_needed = 1, uses_anonymous_args = 0
+	stmfd	sp!, {fp, lr}
+	add	fp, sp, #4
+	sub	sp, sp, #24
+	str	r0, [fp, #-24]
+	str	r1, [fp, #-28]
+	mov	r3, #0
+	str	r3, [fp, #-8]
+	mov	r3, #1
+	str	r3, [fp, #-12]
+	mov	r3, #2
+	str	r3, [fp, #-16]
+	ldr	r3, [fp, #-24]
+	add	r3, r3, #1
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2
+	cmp	r3, #0
+	beq	.L82
+	ldr	r0, [fp, #-24]
+	ldr	r1, [fp, #-28]
+	bl	validWord
+	mov	r3, r0
+	cmp	r3, #0
+	beq	.L83
+	ldr	r3, [fp, #-16]
+	b	.L84
+.L82:
+	ldr	r3, [fp, #-24]
+	ldrb	r3, [r3, #0]
+	strb	r3, [fp, #-17]
+	ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+	mov	r0, r3
+	ldr	r1, [fp, #-28]
+	bl	validChar
+	mov	r3, r0
+	cmp	r3, #0
+	beq	.L83
+	ldr	r3, [fp, #-12]
+	b	.L84
+.L83:
+	ldr	r3, [fp, #-8]
+.L84:
+	mov	r0, r3
+	sub	sp, fp, #4
+	ldmfd	sp!, {fp, pc}
 	.size	isValidGuess, .-isValidGuess
 	.section	.rodata
+	.align	2
+.LC16:
+	.ascii	"Please make a guess: \000"
+	.align	2
 .LC17:
-	.string	"Please make a guess: "
+	.ascii	"%s\000"
+	.align	2
 .LC18:
-	.string	"%s"
+	.ascii	"\012\000"
+	.align	2
 .LC19:
-	.string	"\n"
+	.ascii	"Oops, take another guess!\000"
+	.align	2
 .LC20:
-	.string	"Oops, take another guess!"
+	.ascii	"Good guess!\000"
+	.align	2
 .LC21:
-	.string	"Good guess!"
-	.align 8
+	.ascii	"Good guess! You knew the word!\000"
+	.align	2
 .LC22:
-	.string	"Good guess! You knew the word!"
+	.ascii	"You won!\000"
+	.align	2
 .LC23:
-	.string	"You won!"
-.LC24:
-	.string	"You Lost, try again."
+	.ascii	"You Lost, try again.\000"
 	.text
-	.globl	main
-	.type	main, @function
+	.align	2
+	.global	main
+	.type	main, %function
 main:
-.LFB12:
-	.cfi_startproc
-	pushq	%rbp
-	.cfi_def_cfa_offset 16
-	.cfi_offset 6, -16
-	movq	%rsp, %rbp
-	.cfi_def_cfa_register 6
-	pushq	%rbx
-	subq	$360, %rsp
-	movq	%fs:40, %rax
-	movq	%rax, -24(%rbp)
-	xorl	%eax, %eax
-	movq	%rsp, %rax
-	movq	%rax, %rbx
-	.cfi_offset 3, -24
-	movl	$0, %eax
-	call	welcomeMessage
-	movl	$0, %eax
-	call	newGameOrExit
-	movl	%eax, -308(%rbp)
-	cmpl	$0, -308(%rbp)
-	jne	.L70
-	movl	$1, %edi
-	call	exit
-.L70:
-	movl	$0, %eax
-	call	getDifficulty
-	movl	%eax, -304(%rbp)
-	movl	$6, -316(%rbp)
-	movl	$26, -300(%rbp)
-	movl	-300(%rbp), %eax
-	cltq
-	subq	$1, %rax
-	movq	%rax, -344(%rbp)
-	movl	-300(%rbp), %eax
-	cltq
-	leaq	15(%rax), %rdx
-	movl	$16, %eax
-	subq	$1, %rax
-	addq	%rdx, %rax
-	movq	$16, -360(%rbp)
-	movl	$0, %edx
-	divq	-360(%rbp)
-	imulq	$16, %rax, %rax
-	subq	%rax, %rsp
-	movq	%rsp, %rax
-	addq	$15, %rax
-	shrq	$4, %rax
-	salq	$4, %rax
-	movq	%rax, -336(%rbp)
-	movl	$0, -312(%rbp)
-	jmp	.L71
-.L72:
-	movq	-336(%rbp), %rdx
-	movl	-312(%rbp), %eax
-	cltq
-	movb	$0, (%rdx,%rax)
-	addl	$1, -312(%rbp)
-.L71:
-	movl	-312(%rbp), %eax
-	cmpl	-300(%rbp), %eax
-	jl	.L72
-	movl	-304(%rbp), %eax
-	movl	%eax, %edi
-	call	wordBank
-	movq	%rax, -328(%rbp)
-	jmp	.L73
-.L79:
-	movl	-316(%rbp), %eax
-	movl	%eax, %edi
-	call	hngDrawMan
-	movl	$.LC17, %eax
-	movq	%rax, %rdi
-	movl	$0, %eax
-	call	printf
-	movq	-328(%rbp), %rax
-	movq	%rax, %rdi
-	call	displayWordSoFar
-	nop
-.L75:
-	call	getchar
-	movb	%al, -289(%rbp)
-	cmpb	$10, -289(%rbp)
-	je	.L74
-	cmpb	$-1, -289(%rbp)
-	jne	.L75
-.L74:
-	movl	$.LC18, %eax
-	leaq	-288(%rbp), %rdx
-	movq	%rdx, %rsi
-	movq	%rax, %rdi
-	movl	$0, %eax
-	call	__isoc99_scanf
-	movq	-328(%rbp), %rdx
-	leaq	-288(%rbp), %rax
-	movq	%rdx, %rsi
-	movq	%rax, %rdi
-	call	isValidGuess
-	movl	%eax, -296(%rbp)
-	movl	$.LC19, %edi
-	call	puts
-	cmpl	$0, -296(%rbp)
-	jne	.L76
-	subl	$1, -316(%rbp)
-	movl	$.LC20, %edi
-	call	puts
-	jmp	.L73
-.L76:
-	cmpl	$1, -296(%rbp)
-	jne	.L77
-	movl	$.LC21, %edi
-	call	puts
-	jmp	.L73
-.L77:
-	movl	$.LC22, %edi
-	call	puts
-	movl	$0, %eax
-	call	guessAllLetters
-	jmp	.L78
-.L73:
-	cmpl	$0, -316(%rbp)
-	jle	.L78
-	movq	-328(%rbp), %rax
-	movq	%rax, %rdi
-	call	wordComplete
-	testl	%eax, %eax
-	je	.L79
-.L78:
-	movl	-316(%rbp), %eax
-	movl	%eax, %edi
-	call	hngDrawMan
-	movq	-328(%rbp), %rax
-	movq	%rax, %rdi
-	call	displayWordSoFar
-	movq	-328(%rbp), %rax
-	movq	%rax, %rdi
-	call	wordComplete
-	testl	%eax, %eax
-	je	.L80
-	movl	$.LC23, %edi
-	call	puts
-	jmp	.L81
-.L80:
-	movl	$.LC24, %edi
-	call	puts
-.L81:
-	movl	$0, %eax
-	movq	%rbx, %rsp
-	movq	-24(%rbp), %rdx
-	xorq	%fs:40, %rdx
-	je	.L82
-	call	__stack_chk_fail
-.L82:
-	movq	-8(%rbp), %rbx
-	leave
-	.cfi_def_cfa 7, 8
-	ret
-	.cfi_endproc
-.LFE12:
+	@ args = 0, pretend = 0, frame = 296
+	@ frame_needed = 1, uses_anonymous_args = 0
+	stmfd	sp!, {r4, r5, r6, r7, r8, fp, lr}
+	add	fp, sp, #24
+	sub	sp, sp, #300
+	mov	r3, sp
+	mov	r8, r3
+	bl	welcomeMessage
+	bl	newGameOrExit
+	str	r0, [fp, #-40]
+	ldr	r3, [fp, #-40]
+	cmp	r3, #0
+	bne	.L86
+	mov	r0, #1
+	bl	exit
+.L86:
+	bl	getDifficulty
+	str	r0, [fp, #-44]
+	mov	r3, #6
+	str	r3, [fp, #-32]
+	mov	r3, #26
+	str	r3, [fp, #-48]
+	ldr	r3, [fp, #-48]
+	sub	r3, r3, #1
+	str	r3, [fp, #-52]
+	ldr	r1, [fp, #-48]
+	mov	r2, r1
+	mov	r3, #0
+	mov	r1, r2, lsr #29
+	mov	r7, r3, asl #3
+	orr	r7, r1, r7
+	mov	r6, r2, asl #3
+	ldr	r1, [fp, #-48]
+	mov	r2, r1
+	mov	r3, #0
+	mov	r1, r2, lsr #29
+	mov	r5, r3, asl #3
+	orr	r5, r1, r5
+	mov	r4, r2, asl #3
+	ldr	r3, [fp, #-48]
+	add	r3, r3, #7
+	add	r3, r3, #7
+	mov	r3, r3, lsr #3
+	mov	r3, r3, asl #3
+	sub	sp, sp, r3
+	mov	r3, sp
+	add	r3, r3, #7
+	mov	r3, r3, lsr #3
+	mov	r3, r3, asl #3
+	str	r3, [fp, #-56]
+	mov	r3, #0
+	str	r3, [fp, #-36]
+	b	.L87
+.L88:
+	ldr	r2, [fp, #-56]
+	ldr	r3, [fp, #-36]
+	add	r3, r2, r3
+	mov	r2, #0
+	strb	r2, [r3, #0]
+	ldr	r3, [fp, #-36]
+	add	r3, r3, #1
+	str	r3, [fp, #-36]
+.L87:
+	ldr	r2, [fp, #-36]
+	ldr	r3, [fp, #-48]
+	cmp	r2, r3
+	blt	.L88
+	ldr	r0, [fp, #-44]
+	bl	wordBank
+	str	r0, [fp, #-60]
+	b	.L89
+.L94:
+	ldr	r0, [fp, #-32]
+	bl	hngDrawMan
+	ldr	r3, .L97
+	mov	r0, r3
+	bl	printf
+	ldr	r0, [fp, #-60]
+	bl	displayWordSoFar
+	mov	r0, r0	@ nop
+.L90:
+	bl	getchar
+	mov	r3, r0
+	strb	r3, [fp, #-61]
+	ldrb	r3, [fp, #-61]	@ zero_extendqisi2
+	cmp	r3, #10
+	bne	.L90
+	ldr	r2, .L97+4
+	sub	r3, fp, #324
+	mov	r0, r2
+	mov	r1, r3
+	bl	__isoc99_scanf
+	sub	r3, fp, #324
+	mov	r0, r3
+	ldr	r1, [fp, #-60]
+	bl	isValidGuess
+	str	r0, [fp, #-68]
+	ldr	r0, .L97+8
+	bl	puts
+	ldr	r3, [fp, #-68]
+	cmp	r3, #0
+	bne	.L91
+	ldr	r3, [fp, #-32]
+	sub	r3, r3, #1
+	str	r3, [fp, #-32]
+	ldr	r0, .L97+12
+	bl	puts
+	b	.L89
+.L91:
+	ldr	r3, [fp, #-68]
+	cmp	r3, #1
+	bne	.L92
+	ldr	r0, .L97+16
+	bl	puts
+	b	.L89
+.L92:
+	ldr	r0, .L97+20
+	bl	puts
+	bl	guessAllLetters
+	b	.L93
+.L89:
+	ldr	r3, [fp, #-32]
+	cmp	r3, #0
+	ble	.L93
+	ldr	r0, [fp, #-60]
+	bl	wordComplete
+	mov	r3, r0
+	cmp	r3, #0
+	beq	.L94
+.L93:
+	ldr	r0, [fp, #-32]
+	bl	hngDrawMan
+	ldr	r0, [fp, #-60]
+	bl	displayWordSoFar
+	ldr	r0, [fp, #-60]
+	bl	wordComplete
+	mov	r3, r0
+	cmp	r3, #0
+	beq	.L95
+	ldr	r0, .L97+24
+	bl	puts
+	b	.L96
+.L95:
+	ldr	r0, .L97+28
+	bl	puts
+.L96:
+	mov	r3, #0
+	mov	sp, r8
+	mov	r0, r3
+	sub	sp, fp, #24
+	ldmfd	sp!, {r4, r5, r6, r7, r8, fp, pc}
+.L98:
+	.align	2
+.L97:
+	.word	.LC16
+	.word	.LC17
+	.word	.LC18
+	.word	.LC19
+	.word	.LC20
+	.word	.LC21
+	.word	.LC22
+	.word	.LC23
 	.size	main, .-main
 	.data
-	.type	easy.2560, @object
-	.size	easy.2560, 8
-easy.2560:
-	.string	"giraffe"
-	.type	norm.2561, @object
-	.size	norm.2561, 10
-norm.2561:
-	.string	"embezzled"
-	.type	hard.2562, @object
-	.size	hard.2562, 13
-hard.2562:
-	.string	"quizzicality"
-	.ident	"GCC: (Ubuntu/Linaro 4.6.3-1ubuntu5) 4.6.3"
-	.section	.note.GNU-stack,"",@progbits
+	.align	2
+	.type	easy.2239, %object
+	.size	easy.2239, 8
+easy.2239:
+	.ascii	"giraffe\000"
+	.align	2
+	.type	norm.2240, %object
+	.size	norm.2240, 10
+norm.2240:
+	.ascii	"embezzled\000"
+	.align	2
+	.type	hard.2241, %object
+	.size	hard.2241, 13
+hard.2241:
+	.ascii	"quizzicality\000"
+	.ident	"GCC: (Debian 4.6.3-14+rpi1) 4.6.3"
+	.section	.note.GNU-stack,"",%progbits
