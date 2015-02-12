@@ -255,16 +255,7 @@ int main() {
 	}
 
 	int difficulty = getDifficulty();
-
 	int numLives = 6;
-	
-	const int LETTERS_IN_ALPHABET = 26;
-	char lettersAlreadyGuessed[LETTERS_IN_ALPHABET];
-	int i;
-	for (i = 0; i < LETTERS_IN_ALPHABET; i++) {
-		lettersAlreadyGuessed[i] = 0;
-	}
-
 	char *word = wordBank(difficulty);
 	char guess;
 
@@ -282,7 +273,6 @@ int main() {
 		scanf("%s", guess);
 		
 		int guessStatus = isValidGuess(guess, word);
-
 	
 		printf("\n\n");
 		if (guessStatus == 0) {
