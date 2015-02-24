@@ -5,7 +5,7 @@ CISC 221 Project
 ## Line Assignments
 
 Lines in C |	Function    |        Name
-----------------------------------------
+----------|------------|------------------
 248-299	 |	main             |   Nick
 184-226	 |	hngDrawMan        |  Keegan
 177-182	 |	guessAllLetters	|	Keegan
