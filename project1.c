@@ -27,6 +27,10 @@ int newGameOrExit() {
 	
 	if ((response != 'y') && (response != 'n')) {
 		printf("Sorry, I didn't understand you.\n");
+		
+		char c;
+		while ((c = getchar()) != '\n' && c != EOF);
+		
 		return newGameOrExit();
 	}
 
@@ -151,7 +155,8 @@ int wordComplete(char* word) {
 }
 
 void displayWordSoFar(char* correctWord) {
-    int i = 0;
+	printf("           ");
+    	int i = 0;
 	while (correctWord[i] != '\0') {
 		int j = 0;
 		int match = 0;
@@ -261,7 +266,7 @@ int main() {
 		
 		hngDrawMan(numLives);
 		displayWordSoFar(word);	
-		printf("Please make a guess: ");
+		printf("\nPlease make a guess: ");
 		
 		//Flush the input buffer
 		char c;
