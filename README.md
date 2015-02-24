@@ -2,37 +2,17 @@
 CISC 221 Project
 
 
-## GLOBAL DATA STRUCTURES
+## Line Assignments
 
-- (array) lettersAlreadyGuessed, both correct and incorrect
-  - create a 27-character-long "array" of characters (char[])
-  - set all positions to null (\0)
-  - now we can traverse!
-  - when adding a value, replace the first null reached with the character
-- (array) word bank, one of which is chosen at the beginning of the program
-- (int) number of lives remaining
-
-
-## FUNCTIONS
-
-void displayStickFigure(int lives)
-- draw the stick figure based on how many lives are left
-
-int checkValidWord(char guess[], char correctWord[])
-- return true if the word is correct, or false otherwise
-- either way, the game should end after this is called
-
-int checkValidCharacter(char guess, char correctWord[])
-- return true if the character is in the word but NOT in the letters already guessed array, or false otherwise
-- add the guess to the list of letters already guessed
-
-void displayWordSoFar(char correctWord[])
-- look at each letter in correctWord see if it's already in lettersAlreadyGuessed
-- if it is, display it; otherwise, display a blank
-
-void welcomeMessage()
-- prints a welcome message at the start of the game
-
-char* chooseDifficulty()
-- prompts the user to choose from Easy, Medium, Hard
-- returns the given word, respectively
+Lines in C |	Function    |        Name
+----------------------------------------
+248-299	 |	main             |   Nick
+184-226	 |	hngDrawMan        |  Keegan
+177-182	 |	guessAllLetters	|	Keegan
+41-56	 |	getDifficulty	|	Eric
+58-61	 |	score            |   Eric
+63-79	|	wordBank          |  Eric
+134-151	|	wordComplete	|	Eric
+101-132	|	validChar        |   Christina
+153-175	|	displayWordSoFar|	Brandon
+81-99	|	validWord        |   Brandon

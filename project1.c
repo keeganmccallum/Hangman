@@ -260,8 +260,8 @@ int main() {
 	while (numLives > 0 && !wordComplete(word)) { 
 		
 		hngDrawMan(numLives);
-		printf("Please make a guess: ");
 		displayWordSoFar(word);	
+		printf("Please make a guess: ");
 		
 		//Flush the input buffer
 		char c;
