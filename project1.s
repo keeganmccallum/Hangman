@@ -235,17 +235,17 @@ wordBank:
 	.align	2
 	.global	validWord
 	.type	validWord, %function
-validWord:
+validWord:													@ ARM-to-C TRANSLATION by BRANDON BLOCH
 	@ args = 0, pretend = 0, frame = 16
 	@ frame_needed = 1, uses_anonymous_args = 0
 	@ link register save eliminated.
-	str	fp, [sp, #-4]!
-	add	fp, sp, #0
-	sub	sp, sp, #20
-	str	r0, [fp, #-16]
-	str	r1, [fp, #-20]
-	mov	r3, #0
-	str	r3, [fp, #-8]
+	str	fp, [sp, #-4]!										@ save old frame pointer on stack
+	add	fp, sp, #0											@ create new fp to be used as a reference
+	sub	sp, sp, #20											@ (reserve space for local vars and copies of params)
+	str	r0, [fp, #-16]										@ (copy param guess to stack)
+	str	r1, [fp, #-20]										@ (copy param correctWord to stack)
+	mov	r3, #0												@ (i = 0;
+	str	r3, [fp, #-8]										@ )
 	b	.L24
 .L28:
 	ldr	r3, [fp, #-8]
@@ -256,44 +256,44 @@ validWord:
 	ldr	r1, [fp, #-20]
 	add	r3, r1, r3
 	ldrb	r3, [r3, #0]	@ zero_extendqisi2
-	cmp	r2, r3
+	cmp	r2, r3												@ (if (guess[i] != correctWord[i])
 	beq	.L25
-	mov	r3, #0
-	b	.L26
-.L25:
-	ldr	r3, [fp, #-8]
+	mov	r3, #0												@ (return 0;)
+	b	.L26												@ )
+.L25:														@ (else
+	ldr	r3, [fp, #-8]										@ (
 	add	r3, r3, #1
 	ldr	r2, [fp, #-20]
 	add	r3, r2, r3
 	ldrb	r3, [r3, #0]	@ zero_extendqisi2
-	cmp	r3, #0
+	cmp	r3, #0												@ if (correctWord[i+1] == '\0'
 	bne	.L27
-	ldr	r3, [fp, #-8]
+	ldr	r3, [fp, #-8]										@ &&
 	add	r3, r3, #1
 	ldr	r2, [fp, #-16]
 	add	r3, r2, r3
 	ldrb	r3, [r3, #0]	@ zero_extendqisi2
-	cmp	r3, #0
+	cmp	r3, #0												@ guess[i+1] == '\0')
 	bne	.L27
-	mov	r3, #1
-	b	.L26
-.L27:
+	mov	r3, #1												@ (return 1;)
+	b	.L26												@ )
+.L27:														@ (else
 	ldr	r3, [fp, #-8]
-	add	r3, r3, #1
-	str	r3, [fp, #-8]
+	add	r3, r3, #1											@ (i++
+	str	r3, [fp, #-8]										@ )
 .L24:
-	ldr	r3, [fp, #-8]
+	ldr	r3, [fp, #-8]										@ (while
 	ldr	r2, [fp, #-20]
 	add	r3, r2, r3
 	ldrb	r3, [r3, #0]	@ zero_extendqisi2
-	cmp	r3, #0
-	bne	.L28
-	mov	r3, #0
+	cmp	r3, #0												@ (correctWord[i] != '\0')
+	bne	.L28												@ )
+	mov	r3, #0												@ (return 0;)
 .L26:
 	mov	r0, r3
-	add	sp, fp, #0
-	ldmfd	sp!, {fp}
-	bx	lr
+	add	sp, fp, #0											@ restore space
+	ldmfd	sp!, {fp}										@ restore old frame pointer
+	bx	lr													@ branch to return address stored in lr
 	.size	validWord, .-validWord
 	.align	2
 	.global	validChar
@@ -461,27 +461,27 @@ wordComplete:
 	.align	2
 	.global	displayWordSoFar
 	.type	displayWordSoFar, %function
-displayWordSoFar:
+displayWordSoFar:											@ ARM-to-C TRANSLATION by BRANDON BLOCH
 	@ args = 0, pretend = 0, frame = 24
 	@ frame_needed = 1, uses_anonymous_args = 0
 	stmfd	sp!, {fp, lr}
 	add	fp, sp, #4
-	sub	sp, sp, #24
-	str	r0, [fp, #-24]
-	ldr	r3, .L60
+	sub	sp, sp, #24											@ (reserve space for local vars and copies of params)
+	str	r0, [fp, #-24]										@ (copy param currentWord to stack)
+	ldr	r3, .L60											@ (printf("           ");
 	mov	r0, r3
-	bl	printf
-	mov	r3, #0
-	str	r3, [fp, #-8]
+	bl	printf												@ )
+	mov	r3, #0												@ (int i = 0;
+	str	r3, [fp, #-8]										@ )
 	b	.L53
 .L59:
-	mov	r3, #0
-	str	r3, [fp, #-12]
-	mov	r3, #0
-	str	r3, [fp, #-16]
+	mov	r3, #0												@ (int j = 0;
+	str	r3, [fp, #-12]										@ )
+	mov	r3, #0												@ (int match = 0;
+	str	r3, [fp, #-16]										@ )
 	b	.L54
 .L56:
-	ldr	r3, [fp, #-8]
+	ldr	r3, [fp, #-8]										@ (if
 	ldr	r2, [fp, #-24]
 	add	r3, r2, r3
 	ldrb	r2, [r3, #0]	@ zero_extendqisi2
@@ -489,51 +489,51 @@ displayWordSoFar:
 	ldr	r3, [fp, #-12]
 	add	r3, r1, r3
 	ldrb	r3, [r3, #0]	@ zero_extendqisi2
-	cmp	r2, r3
+	cmp	r2, r3												@ (correctWord[i] == lettersAlreadyGuessed[j])
 	bne	.L55
-	mov	r3, #1
-	str	r3, [fp, #-16]
+	mov	r3, #1												@ (match = 1;
+	str	r3, [fp, #-16]										@ ))
 .L55:
-	ldr	r3, [fp, #-12]
-	add	r3, r3, #1
-	str	r3, [fp, #-12]
+	ldr	r3, [fp, #-12]										@ (
+	add	r3, r3, #1											@ j++;
+	str	r3, [fp, #-12]										@ )
 .L54:
-	ldr	r2, .L60+4
+	ldr	r2, .L60+4											@ (while
 	ldr	r3, [fp, #-12]
 	add	r3, r2, r3
 	ldrb	r3, [r3, #0]	@ zero_extendqisi2
-	cmp	r3, #0
-	bne	.L56
-	ldr	r3, [fp, #-16]
-	cmp	r3, #0
+	cmp	r3, #0												@ (lettersAlreadyGuessed[j] != '\0')
+	bne	.L56												@ )
+	ldr	r3, [fp, #-16]										@ (if
+	cmp	r3, #0												@ (match)
 	beq	.L57
-	ldr	r3, [fp, #-8]
+	ldr	r3, [fp, #-8]										@ (printChar = correctWord[i];
 	ldr	r2, [fp, #-24]
 	add	r3, r2, r3
 	ldrb	r3, [r3, #0]
-	strb	r3, [fp, #-17]
+	strb	r3, [fp, #-17]									@ )
 	b	.L58
-.L57:
-	mov	r3, #45
-	strb	r3, [fp, #-17]
+.L57:														@ (else
+	mov	r3, #45												@ (printChar = '-';
+	strb	r3, [fp, #-17]									@ ))
 .L58:
-	ldrb	r3, [fp, #-17]	@ zero_extendqisi2
+	ldrb	r3, [fp, #-17]	@ zero_extendqisi2				@ (printf("%c", printChar);
 	mov	r0, r3
-	bl	putchar
-	ldr	r3, [fp, #-8]
-	add	r3, r3, #1
-	str	r3, [fp, #-8]
+	bl	putchar												@ )
+	ldr	r3, [fp, #-8]										@ (
+	add	r3, r3, #1											@ i++;
+	str	r3, [fp, #-8]										@ )
 .L53:
-	ldr	r3, [fp, #-8]
+	ldr	r3, [fp, #-8]										@ (while
 	ldr	r2, [fp, #-24]
 	add	r3, r2, r3
 	ldrb	r3, [r3, #0]	@ zero_extendqisi2
-	cmp	r3, #0
-	bne	.L59
-	mov	r0, #10
-	bl	putchar
-	sub	sp, fp, #4
-	ldmfd	sp!, {fp, pc}
+	cmp	r3, #0												@ (correctWord[i] != '\0')
+	bne	.L59												@ )
+	mov	r0, #10												@ (printf("\n");
+	bl	putchar												@ )
+	sub	sp, fp, #4											@ restore space
+	ldmfd	sp!, {fp, pc}									@ restore old frame pointer
 .L61:
 	.align	2
 .L60:
