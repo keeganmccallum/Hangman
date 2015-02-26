@@ -130,45 +130,45 @@ newGameOrExit:
 	.align	2
 	.global	getDifficulty
 	.type	getDifficulty, %function
-getDifficulty:
+getDifficulty:												@ translated by Eric Song
 	@ args = 0, pretend = 0, frame = 8
 	@ frame_needed = 1, uses_anonymous_args = 0
-	stmfd	sp!, {fp, lr}
+	stmfd	sp!, {fp, lr}										@ push return address onto stack
 	add	fp, sp, #4
 	sub	sp, sp, #8
-	ldr	r0, .L14
-	bl	puts
-	mov	r0, r0	@ nop
+	ldr	r0, .L14										@ load string into r0
+	bl	puts											@ print string
+	mov	r0, r0	@ nop										@ char c
 .L12:
-	bl	getchar
-	mov	r3, r0
-	strb	r3, [fp, #-5]
-	ldrb	r3, [fp, #-5]	@ zero_extendqisi2
-	cmp	r3, #10
-	bne	.L12
-	bl	getchar
-	mov	r3, r0
-	strb	r3, [fp, #-6]
-	ldrb	r3, [fp, #-6]	@ zero_extendqisi2
-	cmp	r3, #49
-	beq	.L13
-	ldrb	r3, [fp, #-6]	@ zero_extendqisi2
-	cmp	r3, #50
-	beq	.L13
-	ldrb	r3, [fp, #-6]	@ zero_extendqisi2
-	cmp	r3, #51
-	beq	.L13
-	ldr	r0, .L14+4
-	bl	puts
-	mov	r0, #1
-	bl	exit
+	bl	getchar											@ call getChar
+	mov	r3, r0											@ c = getChar()
+	strb	r3, [fp, #-5]										@ store c into stack
+	ldrb	r3, [fp, #-5]	@ zero_extendqisi2							@ load c from stack
+	cmp	r3, #10											@ while c != \n
+	bne	.L12											@ else loop to .L12
+	bl	getchar											@ call getChar
+	mov	r3, r0											@ difficulty = getChar
+	strb	r3, [fp, #-6]										@ store difficulty into stack
+	ldrb	r3, [fp, #-6]	@ zero_extendqisi2							@ load difficulty from stack
+	cmp	r3, #49											@ if difficulty != 1
+	beq	.L13											@ else go to .L13
+	ldrb	r3, [fp, #-6]	@ zero_extendqisi2							@ load difficulty from stack
+	cmp	r3, #50											@ if difficulty != 2
+	beq	.L13											@ else go to .L13
+	ldrb	r3, [fp, #-6]	@ zero_extendqisi2							@ load difficulty from stack
+	cmp	r3, #51											@ if difficulty != 3
+	beq	.L13											@ else go to .L13
+	ldr	r0, .L14+4										@ load string "Error reading..."
+	bl	puts											@ print string
+	mov	r0, #1				
+	bl	exit											@ exit(1)
 .L13:
-	ldrb	r3, [fp, #-6]	@ zero_extendqisi2
-	sub	r3, r3, #48
-	mov	r0, r3
-	sub	sp, fp, #4
-	ldmfd	sp!, {fp, pc}
-.L15:
+	ldrb	r3, [fp, #-6]	@ zero_extendqisi2							@load difficulty from stack
+	sub	r3, r3, #48										@ difficulty - 0
+	mov	r0, r3											@ return (difficulty - 0)
+	sub	sp, fp, #4										@ empty stack
+	ldmfd	sp!, {fp, pc}										@ restore old fp
+.L15:			
 	.align	2
 .L14:
 	.word	.LC6
@@ -181,19 +181,19 @@ score:
 	@ args = 0, pretend = 0, frame = 16
 	@ frame_needed = 1, uses_anonymous_args = 0
 	@ link register save eliminated.
-	str	fp, [sp, #-4]!
-	add	fp, sp, #0
+	str	fp, [sp, #-4]!										@ save old frame pointer in stack
+	add	fp, sp, #0										
 	sub	sp, sp, #20
-	str	r0, [fp, #-16]
-	str	r1, [fp, #-20]
-	ldr	r3, [fp, #-16]
-	ldr	r2, [fp, #-20]
-	mul	r3, r2, r3
-	str	r3, [fp, #-8]
-	ldr	r3, [fp, #-8]
-	mov	r0, r3
-	add	sp, fp, #0
-	ldmfd	sp!, {fp}
+	str	r0, [fp, #-16]      									@ store lives into stack
+	str	r1, [fp, #-20]										@ store difficulty into stack
+	ldr	r3, [fp, #-16]										@ load lives from stack
+	ldr	r2, [fp, #-20]										@ load difficulty from stack
+	mul	r3, r2, r3										@ myScore = lives*difficulty
+	str	r3, [fp, #-8]										@ store myScore into stack
+	ldr	r3, [fp, #-8]										@ load myScore from stack
+	mov	r0, r3											@ return myScore
+	add	sp, fp, #0										@ empty stack
+	ldmfd	sp!, {fp}										@ restore old fp
 	bx	lr
 	.size	score, .-score
 	.align	2
@@ -203,27 +203,27 @@ wordBank:
 	@ args = 0, pretend = 0, frame = 8
 	@ frame_needed = 1, uses_anonymous_args = 0
 	@ link register save eliminated.
-	str	fp, [sp, #-4]!
+	str	fp, [sp, #-4]!										@ save old stack pointer
 	add	fp, sp, #0
 	sub	sp, sp, #12
-	str	r0, [fp, #-8]
-	ldr	r3, [fp, #-8]
-	cmp	r3, #1
-	bne	.L18
-	ldr	r3, .L21
+	str	r0, [fp, #-8]										@ store difficulty in stack
+	ldr	r3, [fp, #-8]										@ load difficulty from stack
+	cmp	r3, #1											@ if difficulty == 1
+	bne	.L18											@ else go to .L18
+	ldr	r3, .L21										@ r3 = "giraffe"
 	b	.L19
 .L18:
-	ldr	r3, [fp, #-8]
-	cmp	r3, #2
-	bne	.L20
-	ldr	r3, .L21+4
+	ldr	r3, [fp, #-8]										@ load difficulty
+	cmp	r3, #2											@ if difficulty == 2
+	bne	.L20											@ else go to .L20
+	ldr	r3, .L21+4										@ r3 = "embezzled"
 	b	.L19
 .L20:
-	ldr	r3, .L21+8
+	ldr	r3, .L21+8										@ r3 = "quizzicality"
 .L19:
-	mov	r0, r3
-	add	sp, fp, #0
-	ldmfd	sp!, {fp}
+	mov	r0, r3											@ return r3
+	add	sp, fp, #0										@ empty stack
+	ldmfd	sp!, {fp}										@ restore old fp
 	bx	lr
 .L22:
 	.align	2
@@ -385,68 +385,68 @@ validChar:
 	.align	2
 	.global	wordComplete
 	.type	wordComplete, %function
-wordComplete:
+wordComplete:												@translated by Eric Song
 	@ args = 0, pretend = 0, frame = 24
 	@ frame_needed = 1, uses_anonymous_args = 0
 	@ link register save eliminated.
-	str	fp, [sp, #-4]!
+	str	fp, [sp, #-4]!										@ save old frame pointer
 	add	fp, sp, #0
 	sub	sp, sp, #28
-	str	r0, [fp, #-24]
-	mov	r3, #0
-	str	r3, [fp, #-8]
+	str	r0, [fp, #-24]										@ store word into stack
+	mov	r3, #0											@ int i = 0
+	str	r3, [fp, #-8]										@ store i into stack
 	b	.L43
 .L49:
-	mov	r3, #0
-	str	r3, [fp, #-12]
-	mov	r3, #0
-	str	r3, [fp, #-16]
-	b	.L44
+	mov	r3, #0											@ int goodGuess = 0
+	str	r3, [fp, #-12]										@ store goodGuess into stack
+	mov	r3, #0											@ int j = 0
+	str	r3, [fp, #-16]										@ store j into stack
+	b	.L44											@ go to .L44
 .L46:
-	ldr	r3, [fp, #-8]
-	ldr	r2, [fp, #-24]
-	add	r3, r2, r3
-	ldrb	r2, [r3, #0]	@ zero_extendqisi2
+	ldr	r3, [fp, #-8]										@ load i from stack
+	ldr	r2, [fp, #-24]										@ load word from stack
+	add	r3, r2, r3						
+	ldrb	r2, [r3, #0]	@ zero_extendqisi2							@ r2 = word[i]
 	ldr	r1, .L50
-	ldr	r3, [fp, #-16]
+	ldr	r3, [fp, #-16]										@ load j from stack
 	add	r3, r1, r3
-	ldrb	r3, [r3, #0]	@ zero_extendqisi2
-	cmp	r2, r3
-	bne	.L45
-	mov	r3, #1
-	str	r3, [fp, #-12]
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2							@ r3 = lettersAlreadyGuessed[j]
+	cmp	r2, r3											@ if word[i] == lettersAlreadyGuessed[j]
+	bne	.L45											@ else go to .L45
+	mov	r3, #1											@ goodGuess = 1
+	str	r3, [fp, #-12]										@ store goodGuess into stack
 .L45:
-	ldr	r3, [fp, #-16]
-	add	r3, r3, #1
-	str	r3, [fp, #-16]
+	ldr	r3, [fp, #-16]										@ load j from stack
+	add	r3, r3, #1										@ j++
+	str	r3, [fp, #-16]										@ store j into stack
 .L44:
 	ldr	r2, .L50
-	ldr	r3, [fp, #-16]
+	ldr	r3, [fp, #-16]										@ load j from stack
 	add	r3, r2, r3
-	ldrb	r3, [r3, #0]	@ zero_extendqisi2
-	cmp	r3, #0
-	bne	.L46
-	ldr	r3, [fp, #-12]
-	cmp	r3, #0
-	bne	.L47
-	mov	r3, #0
-	b	.L48
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2							@ r3 = lettersAlreadyGuessed[j]
+	cmp	r3, #0											@ if lettersAlreadyGuessed[j] != 0
+	bne	.L46											@ go to .L46
+	ldr	r3, [fp, #-12]										@ load goodGuess from stack
+	cmp	r3, #0											@ if goodGuess != 0 (or is false)
+	bne	.L47											@ go to .L47
+	mov	r3, #0											@ return 0
+	b	.L48											@ branch to .L48
 .L47:
-	ldr	r3, [fp, #-8]
-	add	r3, r3, #1
-	str	r3, [fp, #-8]
+	ldr	r3, [fp, #-8]										@ load i from stack
+	add	r3, r3, #1										@ i++
+	str	r3, [fp, #-8]										@ store i in stack
 .L43:
-	ldr	r3, [fp, #-8]
-	ldr	r2, [fp, #-24]
+	ldr	r3, [fp, #-8]										@ load i from stack
+	ldr	r2, [fp, #-24]										@ load word stack
 	add	r3, r2, r3
 	ldrb	r3, [r3, #0]	@ zero_extendqisi2
-	cmp	r3, #0
-	bne	.L49
-	mov	r3, #1
+	cmp	r3, #0											@ while word[i] != 0
+	bne	.L49											@ go to .L49
+	mov	r3, #1											@ i++
 .L48:
-	mov	r0, r3
-	add	sp, fp, #0
-	ldmfd	sp!, {fp}
+	mov	r0, r3											@ return 1
+	add	sp, fp, #0										@ empty stack
+	ldmfd	sp!, {fp}										@ restore old fp
 	bx	lr
 .L51:
 	.align	2
