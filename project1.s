@@ -130,7 +130,7 @@ newGameOrExit:
 	.align	2
 	.global	getDifficulty
 	.type	getDifficulty, %function
-getDifficulty:												@ translated by Eric Song
+getDifficulty:												@ ARM-to-C TRANSLATION by Eric Song
 	@ args = 0, pretend = 0, frame = 8
 	@ frame_needed = 1, uses_anonymous_args = 0
 	stmfd	sp!, {fp, lr}										@ push return address onto stack
@@ -298,85 +298,85 @@ validWord:													@ ARM-to-C TRANSLATION by BRANDON BLOCH
 	.align	2
 	.global	validChar
 	.type	validChar, %function
-validChar:
+validChar:													@ ARM-to-C TRANSLATION by Christina Masci
 	@ args = 0, pretend = 0, frame = 24
 	@ frame_needed = 1, uses_anonymous_args = 0
 	@ link register save eliminated.
-	str	fp, [sp, #-4]!
-	add	fp, sp, #0
-	sub	sp, sp, #28
-	mov	r3, r0
-	str	r1, [fp, #-28]
-	strb	r3, [fp, #-21]
-	mov	r3, #0
-	str	r3, [fp, #-8]
+	str	fp, [sp, #-4]!										@ save old frame pointer on stack
+	add	fp, sp, #0											@ create new fp to be used as a reference
+	sub	sp, sp, #28											@ (reserve space for local variables and copies of parameters)
+	mov	r3, r0												
+	str	r1, [fp, #-28]										@ (copy  parameter correctWord to stack)
+	strb	r3, [fp, #-21]									@ (copy  parameter guess to stack)
+	mov	r3, #0												@ (i = 0
+	str	r3, [fp, #-8]										@ )
 	b	.L30
 .L35:
-	ldr	r2, .L40
+	ldr	r2, .L40											@ (if (lettersAlreadyGuessed[i] == guess)
 	ldr	r3, [fp, #-8]
 	add	r3, r2, r3
 	ldrb	r3, [r3, #0]	@ zero_extendqisi2
 	ldrb	r2, [fp, #-21]	@ zero_extendqisi2
 	cmp	r2, r3
-	bne	.L31
-	mov	r3, #0
+	bne	.L31												@ )
+	mov	r3, #0												@ (return 0
 	b	.L32
 .L31:
-	ldr	r2, .L40
+	ldr	r2, .L40											@ else { (if (lettersAlreadyGuessed[i] == '\0')
 	ldr	r3, [fp, #-8]
 	add	r3, r2, r3
 	ldrb	r3, [r3, #0]	@ zero_extendqisi2
 	cmp	r3, #0
-	bne	.L33
-	ldr	r2, .L40
+	bne	.L33																							
+	ldr	r2, .L40											@ lettersAlreadyGuessed[i] = guess;
 	ldr	r3, [fp, #-8]
 	add	r3, r2, r3
 	ldrb	r2, [fp, #-21]
 	strb	r2, [r3, #0]
-	b	.L34
+	b	.L34												@ break; )
 .L33:
-	ldr	r3, [fp, #-8]
+	ldr	r3, [fp, #-8]										@ (i++
 	add	r3, r3, #1
-	str	r3, [fp, #-8]
+	str	r3, [fp, #-8]										@ )
 .L30:
-	ldr	r3, [fp, #-8]
+	ldr	r3, [fp, #-8]										@ (while (i < 27)
 	cmp	r3, #26
-	ble	.L35
+	ble	.L35												@ )
 .L34:
-	mov	r3, #0
-	str	r3, [fp, #-16]
+	mov	r3, #0												@ (j = 0
+	str	r3, [fp, #-16]										@ )
 	b	.L36
 .L39:
-	ldr	r3, [fp, #-16]
+	ldr	r3, [fp, #-16]										@ (if (guess == correctWord[j])
 	ldr	r2, [fp, #-28]
 	add	r3, r2, r3
 	ldrb	r3, [r3, #0]	@ zero_extendqisi2
 	ldrb	r2, [fp, #-21]	@ zero_extendqisi2
 	cmp	r2, r3
 	bne	.L37
-	mov	r3, #1
-	str	r3, [fp, #-12]
-	b	.L38
+	mov	r3, #1												@ (result = 1
+	str	r3, [fp, #-12]										@ )
+	b	.L38												@ )
 .L37:
-	mov	r3, #0
-	str	r3, [fp, #-12]
-	ldr	r3, [fp, #-16]
-	add	r3, r3, #1
-	str	r3, [fp, #-16]
+	mov	r3, #0												@ else { (result = 0
+	str	r3, [fp, #-12]										@ )
+	ldr	r3, [fp, #-16]										@ (j++
+	add	r3, r3, #1											
+	str	r3, [fp, #-16]										@ )								
 .L36:
-	ldr	r3, [fp, #-16]
+	ldr	r3, [fp, #-16]										@ (while (correctWord[j] != '\0')
 	ldr	r2, [fp, #-28]
 	add	r3, r2, r3
 	ldrb	r3, [r3, #0]	@ zero_extendqisi2
 	cmp	r3, #0
-	bne	.L39
+	bne	.L39												@ )
 .L38:
-	ldr	r3, [fp, #-12]
+	ldr	r3, [fp, #-12]										@ (return result
 .L32:
-	mov	r0, r3
-	add	sp, fp, #0
-	ldmfd	sp!, {fp}
-	bx	lr
+	mov	r0, r3												@ ))
+	add	sp, fp, #0											@ restore space
+	ldmfd	sp!, {fp}										@ restore old frame pointer
+	bx	lr													@ branch to return address stored in lr
 .L41:
 	.align	2
 .L40:
@@ -385,7 +385,7 @@ validChar:
 	.align	2
 	.global	wordComplete
 	.type	wordComplete, %function
-wordComplete:												@translated by Eric Song
+wordComplete:												@ARM-to-C TRANSLATION by Eric Song
 	@ args = 0, pretend = 0, frame = 24
 	@ frame_needed = 1, uses_anonymous_args = 0
 	@ link register save eliminated.
