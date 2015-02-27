@@ -798,134 +798,135 @@ isValidGuess:
     .global main
     .type   main, %function
 main:
-    @ args = 0, pretend = 0, frame = 280
-    @ frame_needed = 1, uses_anonymous_args = 0
-    stmfd   sp!, {fp, lr}
-    add fp, sp, #4
-    sub sp, sp, #280
-    bl  welcomeMessage
-    bl  newGameOrExit
-    str r0, [fp, #-12]
-    ldr r3, [fp, #-12]
-    cmp r3, #0
-    bne .L87
-    mov r0, #1
-    bl  exit
+	@ args = 0, pretend = 0, frame = 280
+	@ frame_needed = 1, uses_anonymous_args = 0
+					@ARM-to-C translation Nicholas Sheahan
+	stmfd	sp!, {fp, lr}		@batch save machine state on stack
+	add	fp, sp, #4		@setup frame pointer
+	sub	sp, sp, #280		@create stack space
+	bl	welcomeMessage		@call welcomeMessage
+	bl	newGameOrExit		@call newGameOrExit
+	str	r0, [fp, #-12]
+	ldr	r3, [fp, #-12]		@int gameStatus = newGameOrExit()
+	cmp	r3, #0			@if (gameStatus == 0)
+	bne	.L87			@not equal goto L87
+	mov	r0, #1			@otherwise load 1 into r0
+	bl	exit			@exit(1)
 .L87:
-    bl  getDifficulty
-    str r0, [fp, #-16]
-    mov r3, #6
-    str r3, [fp, #-8]
-    ldr r0, [fp, #-16]
-    bl  wordBank
-    str r0, [fp, #-20]
-    b   .L88
+	bl	getDifficulty		@call getDifficulty
+	str	r0, [fp, #-16]		@int difficulty = getDifficulty()
+	mov	r3, #6
+	str	r3, [fp, #-8]		@int numLives = 6
+	ldr	r0, [fp, #-16]
+	bl	wordBank		@char *word = wordBank(difficulty)
+	str	r0, [fp, #-20]
+	b	.L88			@goto L88 unconditionally
 .L93:
-    ldr r0, [fp, #-8]
-    bl  hngDrawMan
-    ldr r0, [fp, #-20]
-    bl  displayWordSoFar
-    ldr r3, .L96
-    mov r0, r3
-    bl  printf
-    mov r0, r0  @ nop
+	ldr	r0, [fp, #-8]		@put numLives in r0
+	bl	hngDrawMan		@hngDrawMan(numLives)
+	ldr	r0, [fp, #-20]		@put word in r0
+	bl	displayWordSoFar	@displayWordSoFar(word);
+	ldr	r3, .L96		@.L96 holds "Please make a guess"
+	mov	r0, r3			@move into r0 for printf
+	bl	printf			@call printf with argument .L96
+	mov	r0, r0	@ nop		@Strange behaviour, why enter a nop?
 .L89:
-    bl  getchar
-    mov r3, r0
-    strb    r3, [fp, #-21]
-    ldrb    r3, [fp, #-21]  @ zero_extendqisi2
-    cmp r3, #10
-    bne .L89
-    ldr r2, .L96+4
-    sub r3, fp, #284
-    mov r0, r2
-    mov r1, r3
-    bl  __isoc99_scanf
-    sub r3, fp, #284
-    mov r0, r3
-    ldr r1, [fp, #-20]
-    bl  isValidGuess
-    str r0, [fp, #-28]
-    ldr r0, .L96+8
-    bl  puts
-    ldr r3, [fp, #-28]
-    cmp r3, #0
-    bne .L90
-    ldr r3, [fp, #-8]
-    sub r3, r3, #1
-    str r3, [fp, #-8]
-    ldr r0, .L96+12
-    bl  puts
-    b   .L88
+	bl	getchar			@call getchar()
+	mov	r3, r0			@store return in r3
+	strb	r3, [fp, #-21]		@c = getchar()
+	ldrb	r3, [fp, #-21]	@ zero_extendqisi2
+	cmp	r3, #10			@compares c with '\n'
+	bne	.L89			@if not equal go back to .L89
+	ldr	r2, .L96+4
+	sub	r3, fp, #284		@char guess[256];
+	mov	r0, r2
+	mov	r1, r3
+	bl	__isoc99_scanf		@scanf("%s", guess);
+	sub	r3, fp, #284
+	mov	r0, r3
+	ldr	r1, [fp, #-20]
+	bl	isValidGuess		@isValidGuess(guess, word);
+	str	r0, [fp, #-28]		@store result in int guessStatus
+	ldr	r0, .L96+8
+	bl	puts			@printf("\n\n")
+	ldr	r3, [fp, #-28]		@load r3 with int guessStatus
+	cmp	r3, #0			@if (guessStatus == 0)
+	bne	.L90			@not equal go to .L90
+	ldr	r3, [fp, #-8]		@load numLives;
+	sub	r3, r3, #1		@numLives--;
+	str	r3, [fp, #-8]
+	ldr	r0, .L96+12
+	bl	puts			@printf("Oops, take another guess);
+	b	.L88			@goto .L88
 .L90:
-    ldr r3, [fp, #-28]
-    cmp r3, #1
-    bne .L91
-    ldr r0, .L96+16
-    bl  puts
-    b   .L88
+	ldr	r3, [fp, #-28]		@load guessStatus into r3
+	cmp	r3, #1			@if (guessStatus == 1)
+	bne	.L91			@if not goto .L91
+	ldr	r0, .L96+16		@else load "Good Guess"
+	bl	puts			@printf("Good Guess")
+	b	.L88			@branch to .L88
 .L91:
-    ldr r0, .L96+20
-    bl  puts
-    bl  guessAllLetters
-    b   .L92
+	ldr	r0, .L96+20
+	bl	puts			@printf("Good guess, you knew the word");
+	bl	guessAllLetters		@call guessAllLetters()
+	b	.L92			@branch .L92
 .L88:
-    ldr r3, [fp, #-8]
-    cmp r3, #0
-    ble .L92
-    ldr r0, [fp, #-20]
-    bl  wordComplete
-    mov r3, r0
-    cmp r3, #0
-    beq .L93
+	ldr	r3, [fp, #-8]		@put numLives in r3
+	cmp	r3, #0			@while (numLives > 0
+	ble	.L92			@goto L92 if less than
+	ldr	r0, [fp, #-20]		@put word in r0
+	bl	wordComplete		@ && !wordComplete(word))
+	mov	r3, r0
+	cmp	r3, #0			@if wordComplete(word) is 0 goto L93
+	beq	.L93
 .L92:
-    ldr r0, [fp, #-8]
-    bl  hngDrawMan
-    ldr r0, [fp, #-20]
-    bl  displayWordSoFar
-    ldr r0, [fp, #-20]
-    bl  wordComplete
-    mov r3, r0
-    cmp r3, #0
-    beq .L94
-    ldr r0, .L96+24
-    bl  puts
-    b   .L95
+	ldr	r0, [fp, #-8]
+	bl	hngDrawMan		@hngDrawMan(numLives)
+	ldr	r0, [fp, #-20]
+	bl	displayWordSoFar	@displayWordSoFar(word)
+	ldr	r0, [fp, #-20]
+	bl	wordComplete		@wordComplete(word)
+	mov	r3, r0			@put return into r3
+	cmp	r3, #0			@compare wordComplete return with 0
+	beq	.L94			@if equal goto .L94
+	ldr	r0, .L96+24
+	bl	puts			@printf("You lost, try again);
+	b	.L95
 .L94:
-    ldr r0, .L96+28
-    bl  puts
+	ldr	r0, .L96+28
+	bl	puts			@printf("You won!\n");
 .L95:
-    mov r3, #0
-    mov r0, r3
-    sub sp, fp, #4
-    ldmfd   sp!, {fp, pc}
+	mov	r3, #0			@0 into r3
+	mov	r0, r3			@0 into r0
+	sub	sp, fp, #4
+	ldmfd	sp!, {fp, pc}		@return 0
 .L97:
-    .align  2
+	.align	2
 .L96:
-    .word   .LC17
-    .word   .LC18
-    .word   .LC19
-    .word   .LC20
-    .word   .LC21
-    .word   .LC22
-    .word   .LC23
-    .word   .LC24
-    .size   main, .-main
-    .data
-    .align  2
-    .type   easy.2243, %object
-    .size   easy.2243, 8
+	.word	.LC17
+	.word	.LC18
+	.word	.LC19
+	.word	.LC20
+	.word	.LC21
+	.word	.LC22
+	.word	.LC23
+	.word	.LC24
+	.size	main, .-main
+	.data
+	.align	2
+	.type	easy.2243, %object
+	.size	easy.2243, 8
 easy.2243:
-    .ascii  "giraffe\000"
-    .align  2
-    .type   norm.2244, %object
-    .size   norm.2244, 10
+	.ascii	"giraffe\000"
+	.align	2
+	.type	norm.2244, %object
+	.size	norm.2244, 10
 norm.2244:
-    .ascii  "embezzled\000"
-    .align  2
-    .type   hard.2245, %object
-    .size   hard.2245, 13
+	.ascii	"embezzled\000"
+	.align	2
+	.type	hard.2245, %object
+	.size	hard.2245, 13
 hard.2245:
-    .ascii  "quizzicality\000"
-    .ident  "GCC: (Debian 4.6.3-14+rpi1) 4.6.3"
-    .section    .note.GNU-stack,"",%progbits
+	.ascii	"quizzicality\000"
+	.ident	"GCC: (Debian 4.6.3-14+rpi1) 4.6.3"
+	.section	.note.GNU-stack,"",%progbits
