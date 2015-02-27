@@ -141,10 +141,10 @@ getDifficulty:												@ ARM-to-C TRANSLATION by Eric Song
 	mov	r0, r0	@ nop										@ char c
 .L12:
 	bl	getchar											
-	mov	r3, r0											@ c = getChar()
-	strb	r3, [fp, #-5]										
-	ldrb	r3, [fp, #-5]	@ zero_extendqisi2							
-	cmp	r3, #10											@ (while c != \n
+	mov	r3, r0											@ ( c = getChar()
+	strb	r3, [fp, #-5]										@ )
+	ldrb	r3, [fp, #-5]	@ zero_extendqisi2							@ (
+	cmp	r3, #10											@ while c != \n )
 	bne	.L12											
 	bl	getchar											
 	mov	r3, r0											@ (difficulty = getChar
@@ -219,7 +219,7 @@ wordBank:
 	ldr	r3, .L21+4										@ r3 = "embezzled"
 	b	.L19
 .L20:
-	ldr	r3, .L21+8										@ r3 = "quizzicality"
+	ldr	r3, .L21+8										@ else r3 = "quizzicality"
 .L19:
 	mov	r0, r3											@ return r3
 	add	sp, fp, #0										@ restore space
@@ -406,12 +406,12 @@ wordComplete:												@ARM-to-C TRANSLATION by Eric Song
 	ldr	r3, [fp, #-8]										@ (
 	ldr	r2, [fp, #-24]										
 	add	r3, r2, r3						
-	ldrb	r2, [r3, #0]	@ zero_extendqisi2							@ r2 = word[i])
+	ldrb	r2, [r3, #0]	@ zero_extendqisi2							@ word[i]
 	ldr	r1, .L50
 	ldr	r3, [fp, #-16]										@ (
 	add	r3, r1, r3
-	ldrb	r3, [r3, #0]	@ zero_extendqisi2							@ r3 = lettersAlreadyGuessed[j])
-	cmp	r2, r3											@ if word[i] == lettersAlreadyGuessed[j]
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2							
+	cmp	r2, r3											@ if word[i] == lettersAlreadyGuessed[j] )
 	bne	.L45											
 	mov	r3, #1											@ (goodGuess = 1
 	str	r3, [fp, #-12]										@ )
@@ -423,10 +423,10 @@ wordComplete:												@ARM-to-C TRANSLATION by Eric Song
 	ldr	r2, .L50
 	ldr	r3, [fp, #-16]										@ (
 	add	r3, r2, r3
-	ldrb	r3, [r3, #0]	@ zero_extendqisi2							@ r3 = lettersAlreadyGuessed[j])
-	cmp	r3, #0											@ if lettersAlreadyGuessed[j] != 0
+	ldrb	r3, [r3, #0]	@ zero_extendqisi2							
+	cmp	r3, #0											@ if lettersAlreadyGuessed[j] != 0 )
 	bne	.L46											
-	ldr	r3, [fp, #-12]										@ l(
+	ldr	r3, [fp, #-12]										@ (
 	cmp	r3, #0											@ if goodGuess != 0 (or is false) )
 	bne	.L47											
 	mov	r3, #0											@ return 0
