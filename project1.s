@@ -10,7 +10,7 @@
 	.eabi_attribute 26, 2
 	.eabi_attribute 30, 6
 	.eabi_attribute 18, 4
-	.file	"project1.c"
+	.file	"pr#oject1.c"
 	.global	lettersAlreadyGuessed
 	.bss
 	.align	2
@@ -822,17 +822,17 @@ main:
 	str	r0, [fp, #-20]
 	b	.L88			@goto L88 unconditionally
 .L93:
-	ldr	r0, [fp, #-8]		#put numLives in r0
-	bl	hngDrawMan		#hngDrawMan(numLives)
-	ldr	r0, [fp, #-20]		#put word in r0
-	bl	displayWordSoFar	#displayWordSoFar(word);
-	ldr	r3, .L96		#.L96 holds "Please make a guess"
-	mov	r0, r3			#move into r0 for printf
-	bl	printf			#call printf with argument .L96
-	mov	r0, r0	@ nop		#Strange behaviour, why enter a nop?
+	ldr	r0, [fp, #-8]		@put numLives in r0
+	bl	hngDrawMan		@hngDrawMan(numLives)
+	ldr	r0, [fp, #-20]		@put word in r0
+	bl	displayWordSoFar	@displayWordSoFar(word);
+	ldr	r3, .L96		@.L96 holds "Please make a guess"
+	mov	r0, r3			@move into r0 for printf
+	bl	printf			@call printf with argument .L96
+	mov	r0, r0	@ nop		@Strange behaviour, why enter a nop?
 .L89:
-	bl	getchar			#call getchar()
-	mov	r3, r0			#store return in r3
+	bl	getchar			@call getchar()
+	mov	r3, r0			@store return in r3
 	strb	r3, [fp, #-21]		@c = getchar()
 	ldrb	r3, [fp, #-21]	@ zero_extendqisi2
 	cmp	r3, #10			@compares c with '\n'
